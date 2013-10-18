@@ -95,65 +95,60 @@ public class Poblacion {
     public Set<Individuo> getIndividuos() {
         return this.individuos;
     }
-
-    private double redondear(double numero, int digitos) {
-        int cifras = (int) Math.pow(10, digitos);
-        return Math.rint(numero * cifras) / cifras;
-    }
-
-    private Set<Individuo> seleccionRuleta(Poblacion poblacionAnterior, int cantDeseado, int maximaAptitud) {
-        Set<Individuo> individuosResultados = new TreeSet();
-
-        double sum = 0;
-        //Suma aptitud Poblacion
-        for (Individuo aux : poblacionAnterior.getIndividuos()) {
-            sum += (maximaAptitud - (aux.getAptitud() + 1));
-        }
-
-        double[] auxCalculo = new double[poblacionAnterior.getIndividuos().size()];
-        double[] auxCalculoAcum = new double[poblacionAnterior.getIndividuos().size()];
-        double sumatoria = 0;
-        int cont = 0;
-        for (Individuo aux : poblacionAnterior.getIndividuos()) {
-            auxCalculo[cont] = redondear(((maximaAptitud - (aux.getAptitud() + 1)) / sum) * 1000, 0); //cantidad de espacios en la ruleta por individuo
-            sumatoria += auxCalculo[cont];
-            auxCalculoAcum[cont] = sumatoria - 1;
-            cont++;
-        }
-        auxCalculo[poblacionAnterior.getIndividuos().size() - 1] += (1000 - sumatoria); //Corrige problema redondeo para el rango
-
-        int aleatorio1 = 0;
-
-        //Hasta acá es el calculo de los rangos.
-
-        //Seleccion
-        int pos, num;
-        for (int i = 0; i < cantDeseado; i++) {
-            aleatorio1 = r.nextInt(1000);
-            pos = 0;
-            for (int j = 0; j < poblacionAnterior.getIndividuos().size(); j++) {
-                if (j == 0) {
-                    if (aleatorio1 <= auxCalculoAcum[j]) {
-                        j = poblacionAnterior.getIndividuos().size();
-                    }
-                } else {
-                    if ((aleatorio1 >= auxCalculoAcum[j - 1] + 1) && (aleatorio1 <= auxCalculoAcum[j])) {
-                        pos = j;
-                        j = poblacionAnterior.getIndividuos().size();
-                    }
-                }
-            }
-            num = 0;
-            for (Individuo aux : poblacionAnterior.getIndividuos()) {
-                if (num == pos) {
-                    Individuo unIndividuo = new Individuo(aux);
-                    individuosResultados.add(unIndividuo);
-                }
-                num++;
-            }
-        }
-        return individuosResultados;
-    }
+    
+//    private Set<Individuo> seleccionRuleta(Poblacion poblacionAnterior, int cantDeseado, int maximaAptitud) {
+//        Set<Individuo> individuosResultados = new TreeSet();
+//
+//        double sum = 0;
+//        //Suma aptitud Poblacion
+//        for (Individuo aux : poblacionAnterior.getIndividuos()) {
+//            sum += (maximaAptitud - (aux.getAptitud() + 1));
+//        }
+//
+//        double[] auxCalculo = new double[poblacionAnterior.getIndividuos().size()];
+//        double[] auxCalculoAcum = new double[poblacionAnterior.getIndividuos().size()];
+//        double sumatoria = 0;
+//        int cont = 0;
+//        for (Individuo aux : poblacionAnterior.getIndividuos()) {
+//            auxCalculo[cont] = redondear(((maximaAptitud - (aux.getAptitud() + 1)) / sum) * 1000, 0); //cantidad de espacios en la ruleta por individuo
+//            sumatoria += auxCalculo[cont];
+//            auxCalculoAcum[cont] = sumatoria - 1;
+//            cont++;
+//        }
+//        auxCalculo[poblacionAnterior.getIndividuos().size() - 1] += (1000 - sumatoria); //Corrige problema redondeo para el rango
+//
+//        int aleatorio1 = 0;
+//
+//        //Hasta acá es el calculo de los rangos.
+//
+//        //Seleccion
+//        int pos, num;
+//        for (int i = 0; i < cantDeseado; i++) {
+//            aleatorio1 = r.nextInt(1000);
+//            pos = 0;
+//            for (int j = 0; j < poblacionAnterior.getIndividuos().size(); j++) {
+//                if (j == 0) {
+//                    if (aleatorio1 <= auxCalculoAcum[j]) {
+//                        j = poblacionAnterior.getIndividuos().size();
+//                    }
+//                } else {
+//                    if ((aleatorio1 >= auxCalculoAcum[j - 1] + 1) && (aleatorio1 <= auxCalculoAcum[j])) {
+//                        pos = j;
+//                        j = poblacionAnterior.getIndividuos().size();
+//                    }
+//                }
+//            }
+//            num = 0;
+//            for (Individuo aux : poblacionAnterior.getIndividuos()) {
+//                if (num == pos) {
+//                    Individuo unIndividuo = new Individuo(aux);
+//                    individuosResultados.add(unIndividuo);
+//                }
+//                num++;
+//            }
+//        }
+//        return individuosResultados;
+//    }
 
     private Set<Individuo> cruzaCiclico(Poblacion poblacionAnterior, int cantDeseado, ArrayList<ArrayList<Integer>> restricciones, String operacion) {
         Set<Individuo> individuosResultados = new TreeSet();
