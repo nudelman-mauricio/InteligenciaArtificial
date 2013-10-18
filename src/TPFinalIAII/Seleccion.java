@@ -2,26 +2,26 @@ package TPFinalIAII;
 
 import java.util.Random;
 import java.util.Set;
-import java.util.TreeSet;
 
-public class Seleccion {
+public class Seleccion implements Runnable{
 
     Poblacion poblacionVieja;
     int porcentajeSeleccion;
     int maximaAptitud;
-    Set<Individuo> individuosResultados;    
+    Set<Individuo> individuos;    
     private Random generadorAleatorio;
     int aleatorio;
 
-    public Seleccion(Poblacion poblacion, int porcentajeSeleccion, int maximaAptitud) {
+    public Seleccion(Poblacion poblacion, int porcentajeSeleccion, int maximaAptitud, Set<Individuo> individuos) {
         this.poblacionVieja = poblacion;
         this.porcentajeSeleccion = porcentajeSeleccion;
         this.maximaAptitud = maximaAptitud;
         this.generadorAleatorio = new Random();
-        this.individuosResultados = new TreeSet();
+        this.individuos = individuos;
     }
 
-    public Set<Individuo> seleccionRuleta() {
+    @Override
+    public void run() {
         
         double sum = 0;
         //Suma aptitud Poblacion
@@ -65,13 +65,15 @@ public class Seleccion {
             num = 0;
             for (Individuo aux : poblacionVieja.getIndividuos()) {
                 if (num == pos) {
-                    Individuo unIndividuo = new Individuo(aux);
-                    individuosResultados.add(unIndividuo);
+                    agregarIndividuo(new Individuo(aux));
                 }
                 num++;
             }
         }
-        return (this.individuosResultados);
+    }
+    
+    private synchronized void agregarIndividuo(Individuo individuo){
+        this.individuos.add(individuo);
     }
 
     private double redondear(double numero, int digitos) {
