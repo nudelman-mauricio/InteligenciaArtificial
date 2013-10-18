@@ -24,18 +24,25 @@ public class Poblacion {
 
     //Constructor para generar poblaciones nuevas a partir de una anterior utilizando los operadores
     public Poblacion(String operacion, int cantIndividuos, Poblacion poblacion, ArrayList<ArrayList<Integer>> restricciones, int porcentajeSeleccion, int porcentajeCruza, int porcentajeMutacion, int maximaAptitud) {
-
+        
+        //--------------------------------------------------------------------------------------------------------------
         //Seleccion Ruleta        
         Seleccion unaSeleccion = new Seleccion(poblacion, porcentajeSeleccion, maximaAptitud, this.individuos);
         //Hilo de Seleccion Ruleta
         Thread hiloSeleccion = new Thread(unaSeleccion);
         //Comenzar Seleccion
         hiloSeleccion.start();
+        
+        //--------------------------------------------------------------------------------------------------------------
+        //Cruza Ciclica        
+        Cruza unaCruza = new Cruza(poblacion, porcentajeCruza, restricciones, operacion, this.individuos);
+        //Hilo de Cruza
+        Thread hiloCruza = new Thread(unaCruza);
+        //Comenzar Cruza
+        hiloCruza.start();
 
-        //Cruza Ciclica  -------------------------------------------------------        
-        this.individuos.addAll(cruzaCiclico(poblacion, porcentajeCruza, restricciones, operacion));
-
-        //Mutacion -------------------------------------------------------
+        //--------------------------------------------------------------------------------------------------------------
+        //Mutacion
         this.individuos.addAll(mutacion(poblacion, porcentajeMutacion, restricciones, operacion));
         
         
