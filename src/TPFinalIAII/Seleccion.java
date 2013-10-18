@@ -16,8 +16,8 @@ public class Seleccion implements Runnable{
         this.poblacionVieja = poblacion;
         this.porcentajeSeleccion = porcentajeSeleccion;
         this.maximaAptitud = maximaAptitud;
-        this.generadorAleatorio = new Random();
         this.individuos = individuos;
+        this.generadorAleatorio = new Random();        
     }
 
     @Override
