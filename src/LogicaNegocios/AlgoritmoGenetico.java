@@ -49,10 +49,10 @@ public class AlgoritmoGenetico{
                 if (this.porcentajeMutacion < valorMax) {
                     this.porcentajeMutacion++;   
                     this.porcentajeCruza--; 
-                    acumulador = 0; //Setea devuelta a 0 para solucionar el problema que sumaba siempre 
+            acumulador = 0; //Setea devuelta a 0 para solucionar el problema que sumaba siempre 
                 } else {
                     this.porcentajeMutacion = valorMax;
-                    this.porcentajeCruza = (100 - this.porcentajeMutacion - this.porcentajeSeleccion);
+                    this.porcentajeCruza = (this.cantIndividuos- this.porcentajeMutacion - this.porcentajeSeleccion);
                 }
             }
         }
