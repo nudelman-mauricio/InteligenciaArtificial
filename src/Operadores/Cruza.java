@@ -99,7 +99,7 @@ public class Cruza implements Runnable {
             synchronized (individuos) {
                 individuos.add(new Individuo(String.copyValueOf(hijo1), operacion, restricciones));
                 System.out.println("agregue en cruza hijo 1");
-                //individuos.notify();
+                individuos.notify();
             }
 
             if (!((cantidadImpar) && (j + 1 == (porcentajeCruza / 2)))) {
@@ -107,7 +107,7 @@ public class Cruza implements Runnable {
                 synchronized (individuos) {
                     individuos.add(new Individuo(String.copyValueOf(hijo2), operacion, restricciones));
                     System.out.println("agregue en cruza hijo 2");
-                    //individuos.notify();
+                    individuos.notify();
                 }
             }
         }
@@ -116,6 +116,10 @@ public class Cruza implements Runnable {
     private char[] progenitorAleatorio() {
         int cont = 0;
         char[] progenitor = null;
+        
+        System.out.println(this.poblacionVieja.getIndividuos().size());//--------------------------------------------------------QUITAR
+        
+        
         int aleatorio = this.generadorAleatorio.nextInt(this.poblacionVieja.getIndividuos().size());
         for (Individuo aux : this.poblacionVieja.getIndividuos()) {
             if (cont == aleatorio) {

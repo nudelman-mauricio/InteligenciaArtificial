@@ -72,7 +72,7 @@ public class Seleccion implements Runnable {
                     //agregar de forma Sincronizada al nuevo individuo
                     synchronized (individuos) {
                         individuos.add(new Individuo(aux));
-                        //individuos.notify();
+                        individuos.notify();
                     }
                 }
                 num++;

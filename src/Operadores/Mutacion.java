@@ -31,9 +31,9 @@ public class Mutacion implements Runnable {
         for (int i = 0; i < this.porcentajeMutacion; i++) {
             Individuo aux = (Individuo) it.next();
             //agregar de forma Sincronizada al nuevo individuo
-            synchronized (this.individuos) {
-                this.individuos.add(new Individuo(aux.mutacion(), this.operacion, this.restricciones));
-                //individuos.notify();
+            synchronized (individuos) {
+                individuos.add(new Individuo(aux.mutacion(), this.operacion, this.restricciones));
+                individuos.notify();
             }
         }
         //return (individuosResultados);

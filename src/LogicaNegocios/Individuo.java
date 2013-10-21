@@ -76,8 +76,8 @@ public class Individuo implements Comparable {
                 if (operacion.charAt(i) == '+' || operacion.charAt(i) == '-' || operacion.charAt(i) == '/' || operacion.charAt(i) == '*' || operacion.charAt(i) == '(' || operacion.charAt(i) == ')') {
                     resultado += String.valueOf(operacion.charAt(i));
                 } else {
-                    for (int j = 0; j < genes.length(); j++) {
-                        if (operacion.charAt(i) == genes.charAt(j)) {
+                    for (int j = 0; j < this.genes.length(); j++) {
+                        if (operacion.charAt(i) == this.genes.charAt(j)) {
                             resultado += String.valueOf(j);
                         }
                     }
@@ -87,8 +87,6 @@ public class Individuo implements Comparable {
         //calcular el resultado solamente
         try {
             numResultado = Long.toString(calcularString(resultado));
-
-
         } catch (ScriptException ex) {
             Logger.getLogger(Individuo.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -172,7 +170,7 @@ public class Individuo implements Comparable {
 
     public String mutacion() {
         Random r = new Random();
-        char[] mutado = new char[10];
+        char[] mutado;
         int nrand1 = 0, nrand2 = 0;
         while (nrand1 == nrand2) {
             nrand1 = r.nextInt(10);
