@@ -3,28 +3,29 @@ package Operadores;
 import LogicaNegocios.Individuo;
 import LogicaNegocios.Poblacion;
 import java.util.Random;
-import java.util.Set;
 
 public class Seleccion implements Runnable{
 
     Poblacion poblacionVieja;
     int porcentajeSeleccion;
     int maximaAptitud;
-    Set<Individuo> individuos;    
+    Poblacion poblacion;    
     private Random generadorAleatorio;
     int aleatorio;
 
-    public Seleccion(Poblacion poblacion, int porcentajeSeleccion, int maximaAptitud, Set<Individuo> individuos) {
+    public Seleccion(Poblacion poblacion, int porcentajeSeleccion, int maximaAptitud, Poblacion unaPoblacion) {
         this.poblacionVieja = poblacion;
         this.porcentajeSeleccion = porcentajeSeleccion;
         this.maximaAptitud = maximaAptitud;
-        this.individuos = individuos;
+        this.poblacion = unaPoblacion;
         this.generadorAleatorio = new Random();        
     }
 
     @Override
     public void run() {
+        //dormirHiloPoblacion(poblacion);
         
+        System.out.println("seleccion");
         double sum = 0;
         //Suma aptitud Poblacion
         for (Individuo aux : poblacionVieja.getIndividuos()) {
@@ -67,19 +68,21 @@ public class Seleccion implements Runnable{
             num = 0;
             for (Individuo aux : poblacionVieja.getIndividuos()) {
                 if (num == pos) {
-                    agregarIndividuo(new Individuo(aux));
+                    poblacion.agregarIndividuo(new Individuo(aux));
                 }
                 num++;
             }
-        }
-    }
-    
-    private synchronized void agregarIndividuo(Individuo individuo){
-        this.individuos.add(individuo);
+        }        
     }
     
     private double redondear(double numero, int digitos) {
         int cifras = (int) Math.pow(10, digitos);
         return Math.rint(numero * cifras) / cifras;
+    }
+    
+    private synchronized void dormirHiloPoblacion(Poblacion unaPoblacion){
+        try{
+            unaPoblacion.wait();
+        }catch (Exception ex){}
     }
 }

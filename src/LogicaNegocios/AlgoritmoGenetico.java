@@ -11,8 +11,7 @@ public class AlgoritmoGenetico{
     int porcentajeCruza;
     int porcentajeMutacion;
     double lambda;
-    ArrayList<ArrayList<Integer>> restricciones;
-    
+    ArrayList<ArrayList<Integer>> restricciones;    
 
    public AlgoritmoGenetico(int maximaAptitud, String operacion, int cantIndividuos, int porcentajeSeleccion, int porcentajeCruza, int porcentajeMutacion, double lambda, ArrayList<ArrayList<Integer>> restricciones) {
         this.maximaAptitud = maximaAptitud;
@@ -40,7 +39,7 @@ public class AlgoritmoGenetico{
         while (poblacionActual.esSolucion() == null) {
             System.out.println("Población Número: " + poblacionNumero + " Aptitud: " + poblacionActual.aptitudProm() + " %Mutación: " + porcentajeMutacion + " Cantided de porblación: "+ poblacionActual.getIndividuos().size());
              
-            poblacionNueva = new Poblacion(operacion, cantIndividuos, poblacionActual, restricciones, porcentajeSeleccion, porcentajeCruza, porcentajeMutacion, maximaAptitud);
+            poblacionNueva = new Poblacion(cantIndividuos, poblacionActual, restricciones, porcentajeSeleccion, porcentajeCruza, porcentajeMutacion, maximaAptitud);
             poblacionActual = poblacionNueva;
             poblacionNumero++;
             

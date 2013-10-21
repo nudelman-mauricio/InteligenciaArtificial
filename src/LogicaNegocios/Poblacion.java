@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Poblacion {
 
@@ -17,44 +19,54 @@ public class Poblacion {
     //Constructor para generar primer poblacion aleatoria
     public Poblacion(String operacion, int cantIndividuos, ArrayList<ArrayList<Integer>> restricciones) {
         this.operacion = operacion;
-        String vectorPalabra = vectorPalabraOperacion(operacion);
-        for (int i = 0; i < cantIndividuos; i++) {
-            Individuo unIndividuo = new Individuo(mezclaVector(vectorPalabra), operacion, restricciones);
-            this.individuos.add(unIndividuo);
+        //obtiene 10 letras diferentes a partir de la operacion        
+        String unVectorPalabra = vectorPalabraOperacion(operacion);
+        //creacion de x cantidad de individuos nuevos y aleatorios
+        for (int i = 0; i < cantIndividuos; i++) {         
+            this.individuos.add(new Individuo(mezclaVector(unVectorPalabra), operacion, restricciones));
         }
     }
 
     //Constructor para generar poblaciones nuevas a partir de una anterior utilizando los operadores
-    public Poblacion(String operacion, int cantIndividuos, Poblacion poblacion, ArrayList<ArrayList<Integer>> restricciones, int porcentajeSeleccion, int porcentajeCruza, int porcentajeMutacion, int maximaAptitud) {
+    public Poblacion(int cantIndividuos, Poblacion poblacion, ArrayList<ArrayList<Integer>> restricciones, int porcentajeSeleccion, int porcentajeCruza, int porcentajeMutacion, int maximaAptitud) {
         
         //Seleccion Ruleta        
-        Seleccion unaSeleccion = new Seleccion(poblacion, porcentajeSeleccion, maximaAptitud, this.individuos);        
+        Seleccion unaSeleccion = new Seleccion(poblacion, porcentajeSeleccion, maximaAptitud, Poblacion.this);        
         //Cruza Ciclica        
-        Cruza unaCruza = new Cruza(poblacion, porcentajeCruza, restricciones, operacion, this.individuos);       
+        Cruza unaCruza = new Cruza(poblacion, porcentajeCruza, restricciones, operacion, Poblacion.this);       
         //Mutacion
-        Mutacion unaMutacion = new Mutacion(poblacion, porcentajeMutacion, restricciones, operacion, this.individuos);
-        
+        Mutacion unaMutacion = new Mutacion(poblacion, porcentajeMutacion, restricciones, operacion, Poblacion.this);
+       
         //metodo que ejecuta los operadores en forma paralela
-        operadores(unaSeleccion, unaCruza, unaMutacion);
+        ejecutarOperadores(unaSeleccion, unaCruza, unaMutacion);
+        System.out.println("fin llamador");
     }
     
-    private void operadores(Seleccion unaSeleccion, Cruza unaCruza, Mutacion unaMutacion){
-        //Hilo de Seleccion Ruleta
+    private void ejecutarOperadores(Seleccion unaSeleccion, Cruza unaCruza, Mutacion unaMutacion){
+        //creacion de hilos
         Thread hiloSeleccion = new Thread(unaSeleccion);
-        //Comenzar Seleccion
-        hiloSeleccion.start();
-        
-        //Hilo de Cruza
         Thread hiloCruza = new Thread(unaCruza);
-        //Comenzar Cruza
-        hiloCruza.start();
-        
-        //Hilo de Cruza
         Thread hiloMutacion = new Thread(unaMutacion);
-        //Comenzar Cruza
-        hiloMutacion.start();   
+        
+        //ejecucion de hilos paralelos
+        hiloSeleccion.start();
+        hiloCruza.start();
+        hiloMutacion.start();
+        
+        try {
+            System.out.println("esperando....");
+            hiloSeleccion.join();
+            hiloCruza.join();
+            hiloMutacion.join();            
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Poblacion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("fin espera");
     }
-
+    
+    public synchronized void agregarIndividuo(Individuo unIndividuo){
+        this.individuos.add(unIndividuo);
+    }
     
     private String vectorPalabraOperacion(String operacion) {
         String operando = "";

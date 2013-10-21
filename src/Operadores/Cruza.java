@@ -12,23 +12,24 @@ public class Cruza implements Runnable {
     int porcentajeCruza;
     ArrayList<ArrayList<Integer>> restricciones;
     String operacion;
-    Set<Individuo> individuos;
+    Poblacion poblacion;
     private Random generadorAleatorio;
     int aleatorio;
 
-    public Cruza(Poblacion poblacion, int porcentajeCruza, ArrayList<ArrayList<Integer>> restricciones, String operacion, Set<Individuo> individuos) {
+    public Cruza(Poblacion poblacion, int porcentajeCruza, ArrayList<ArrayList<Integer>> restricciones, String operacion,  Poblacion unaPoblacion) {
         this.poblacionVieja = poblacion;
         this.porcentajeCruza = porcentajeCruza;
         this.restricciones = restricciones;
         this.operacion = operacion;
-        this.individuos = individuos;
+        this.poblacion = unaPoblacion;
         this.generadorAleatorio = new Random();
     }
     
     @Override
     public void run() {
-//    private Set<Individuo> cruzaCiclico(Poblacion poblacionVieja, int porcentajeCruza, ArrayList<ArrayList<Integer>> restricciones, String operacion) {
-        //Set<Individuo> individuosResultados = new TreeSet();
+        
+        System.out.println("cruza");
+        
         Individuo unIndividuo;
         char[] padre = null, madre = null, hijo1 = new char[10], hijo2 = new char[10];
         boolean bandera = true, cantImp = false;
@@ -102,17 +103,13 @@ public class Cruza implements Runnable {
             }
 
             unIndividuo = new Individuo(String.copyValueOf(hijo1), operacion, restricciones);
-            agregarIndividuo(unIndividuo);
+            poblacion.agregarIndividuo(unIndividuo);
 
             if (!((cantImp) && (j + 1 == (porcentajeCruza / 2)))) {
                 unIndividuo = new Individuo(String.copyValueOf(hijo1), operacion, restricciones);
-                agregarIndividuo(unIndividuo);
+                poblacion.agregarIndividuo(unIndividuo);
             }
         }
-    }
-    
-    private synchronized void agregarIndividuo(Individuo individuo){
-        this.individuos.add(individuo);
     }
 
     private String progenitorAleatorio(Poblacion poblacionVieja) {

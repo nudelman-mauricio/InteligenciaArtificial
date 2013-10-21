@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class Main {
     
-    static Ventana unaVentana;
-    static AlgoritmoGenetico unAlgoritmoGenetico;
+    private static Ventana unaVentana;
+    private static AlgoritmoGenetico unAlgoritmoGenetico;
     
     public static void main(String[] args) {
         unaVentana = new Ventana();
