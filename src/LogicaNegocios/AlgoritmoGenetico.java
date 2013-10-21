@@ -37,7 +37,7 @@ public class AlgoritmoGenetico{
 
         //generar poblaciones nuevas a partir de una vieja mientras no se alcance un individuo resultado
         while (poblacionActual.esSolucion() == null) {
-            System.out.println("Población Número: " + poblacionNumero + " Aptitud: " + poblacionActual.aptitudProm() + " %Mutación: " + this.porcentajeMutacion + " Cantided de porblación: "+ poblacionActual.getIndividuos().size());
+            System.out.println("Población Número: " + poblacionNumero + " Aptitud: " + poblacionActual.aptitudProm() + " %Mutación: " + this.porcentajeMutacion + " Cantidad de población: "+ poblacionActual.getIndividuos().size());
              
             poblacionNueva = new Poblacion(operacion, this.cantIndividuos, poblacionActual, this.restricciones, this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion, this.maximaAptitud);
             poblacionActual = poblacionNueva;
@@ -60,7 +60,7 @@ public class AlgoritmoGenetico{
         if (poblacionActual.esSolucion() != null) {
             System.out.println("\n" + poblacionActual.esSolucion().toString());
             System.out.println("Cantidad de Iteracciones: " + poblacionNumero);
-            System.out.println("%Seleccion: " + this.porcentajeSeleccion + " %Cruza: " + (this.porcentajeCruza * 2) + " %Mutacion: " + this.porcentajeMutacion + " CantIndividuos: " + poblacionActual.getIndividuos().size());
+            System.out.println("%Seleccion: " + this.porcentajeSeleccion + " %Cruza: " + this.porcentajeCruza + " %Mutacion: " + this.porcentajeMutacion + " CantIndividuos: " + poblacionActual.getIndividuos().size());
         }
     }
 }
