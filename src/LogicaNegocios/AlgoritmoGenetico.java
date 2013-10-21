@@ -73,6 +73,9 @@ public class AlgoritmoGenetico{
         if (poblacionActual.esSolucion() != null) {
             Ventana.addTabla(modelo);
             Ventana.graficar(y);
+            
+            Ventana.resultados(poblacionActual.esSolucion().getGenes(), poblacionNumero, operacion);
+            
             System.out.println("\n" + poblacionActual.esSolucion().toString());
             System.out.println("Cantidad de Iteracciones: " + poblacionNumero);
             System.out.println("%Seleccion: " + this.porcentajeSeleccion + " %Cruza: " + this.porcentajeCruza + " %Mutacion: " + this.porcentajeMutacion + " CantIndividuos: " + poblacionActual.getIndividuos().size());

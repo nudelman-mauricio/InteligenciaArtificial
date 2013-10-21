@@ -24,6 +24,11 @@ public class Ventana extends javax.swing.JFrame {
         jTableIteraciones.setModel(modelo);        
     }
     
+    public static void resultados(String gen, int numeroPoblacion, String Operacion) { 
+        jLabelCantIteraciones.setText(String.valueOf(numeroPoblacion));
+        //Aca falta completar cosas de lucas
+    }
+    
     public static void graficar(double []aptitudProm){
         double [] auxiliar ; int cont=0;
         for(int i=0; i<aptitudProm.length;i++){
@@ -44,12 +49,12 @@ public class Ventana extends javax.swing.JFrame {
         dataset.addSeries(series);
         // Generate the graph
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "XY Chart", // Title
-                "x-axis", // x-axis Label
-                "y-axis", // y-axis Label
+                "", // Title
+                "Cantidad Iteraciones", // x-axis Label
+                "Aptitud", // y-axis Label
                 dataset, // Dataset
                 PlotOrientation.VERTICAL, // Plot Orientation
-                true, // Show Legend
+                false, // Show Legend
                 true, // Use tooltips
                 false // Configure chart to generate URLs?
                 );         
@@ -61,7 +66,7 @@ public class Ventana extends javax.swing.JFrame {
         XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer)plot.getRenderer();
         renderer.setSeriesPaint(0, Color.BLUE);
         BufferedImage graficoLinea = null;
-        graficoLinea = chart.createBufferedImage(590, 220);
+        graficoLinea = chart.createBufferedImage(590, 275);
         jLabelGrafica.setIcon(new ImageIcon(graficoLinea));
         jPanel1.updateUI();
     }
@@ -97,6 +102,12 @@ public class Ventana extends javax.swing.JFrame {
         jTableIteraciones = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
+        jLabelOpeOriginal = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabelOpeResultado = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabelCantIteraciones = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -224,6 +235,8 @@ public class Ventana extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Grafico", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 14))); // NOI18N
 
+        jLabelGrafica.setPreferredSize(new java.awt.Dimension(500, 0));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -279,7 +292,26 @@ public class Ventana extends javax.swing.JFrame {
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resultado", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 14))); // NOI18N
         jPanel4.setToolTipText("");
 
-        jLabel6.setText("jLabel6");
+        jLabel6.setFont(new java.awt.Font("Calibri", 1, 13)); // NOI18N
+        jLabel6.setText("Operación Criptoaritmetica:");
+
+        jLabelOpeOriginal.setFont(new java.awt.Font("Calibri", 3, 14)); // NOI18N
+        jLabelOpeOriginal.setText(" ");
+
+        jLabel8.setFont(new java.awt.Font("Calibri", 1, 13)); // NOI18N
+        jLabel8.setText("Operación Resultante:");
+
+        jLabelOpeResultado.setFont(new java.awt.Font("Calibri", 3, 14)); // NOI18N
+        jLabelOpeResultado.setText(" ");
+
+        jLabel9.setFont(new java.awt.Font("Calibri", 1, 13)); // NOI18N
+        jLabel9.setText("Cantidad de Iteraciones:");
+
+        jLabelCantIteraciones.setFont(new java.awt.Font("Calibri", 3, 14)); // NOI18N
+        jLabelCantIteraciones.setText(" ");
+
+        jLabel10.setFont(new java.awt.Font("Calibri", 1, 13)); // NOI18N
+        jLabel10.setText("Gen Resultante:");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -287,15 +319,41 @@ public class Ventana extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel6)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelOpeResultado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelOpeOriginal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel8)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelCantIteraciones, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel10))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
                 .addComponent(jLabel6)
-                .addContainerGap(249, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelOpeOriginal)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelOpeResultado)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabelCantIteraciones))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel10)
+                .addContainerGap(128, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -356,6 +414,8 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldMutacion1ActionPerformed
 
     private void jButtonCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCalcularActionPerformed
+        jLabelOpeOriginal.setText(jTextOperacion.getText());
+        
         Main.comenzarAlgoritmo(
                 jTextOperacion.getText(),
                 Integer.parseInt(jComboBoxCantidadIndividuos.getSelectedItem().toString()),
@@ -363,6 +423,7 @@ public class Ventana extends javax.swing.JFrame {
                 Integer.parseInt(jTextFieldCruza.getText()),
                 Integer.parseInt(jTextFieldMutacion.getText()),
                 ((double) 25) / 100000);
+        
     }//GEN-LAST:event_jButtonCalcularActionPerformed
 
     /**
@@ -404,13 +465,19 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JButton jButtonCalcular;
     private javax.swing.JComboBox jComboBoxCantidadIndividuos;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private static javax.swing.JLabel jLabelCantIteraciones;
     private static javax.swing.JLabel jLabelGrafica;
+    private javax.swing.JLabel jLabelOpeOriginal;
+    private javax.swing.JLabel jLabelOpeResultado;
     private static javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
