@@ -4,32 +4,37 @@ import LogicaNegocios.Individuo;
 import LogicaNegocios.Poblacion;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 
 public class Mutacion implements Runnable {
 
-    Poblacion poblacionVieja;
-    int porcentajeMutacion;
-    ArrayList<ArrayList<Integer>> restricciones;
-    String operacion;
-    Poblacion poblacion;
+    private Poblacion poblacionVieja;
+    private int porcentajeMutacion;
+    private ArrayList<ArrayList<Integer>> restricciones;
+    private String operacion;
+    private Set<Individuo> individuos;
 
-    public Mutacion(Poblacion poblacion, int porcentajeMutacion, ArrayList<ArrayList<Integer>> restricciones, String operacion,  Poblacion unaPoblacion) {
-        this.poblacionVieja = poblacion;
+    public Mutacion(Poblacion poblacionActual, int porcentajeMutacion, ArrayList<ArrayList<Integer>> restricciones, String operacion,  Set<Individuo> individuos) {
+        this.poblacionVieja = poblacionActual;
         this.porcentajeMutacion = porcentajeMutacion;
         this.restricciones = restricciones;
         this.operacion = operacion;
-        this.poblacion = unaPoblacion;
+        this.individuos = individuos;
     }
 
     @Override
     public void run() {
        
-        System.out.println("mutacion");
+        System.out.println("Mutacion");
         
-        Iterator it = poblacionVieja.getIndividuos().iterator();
-        for (int i = 0; i < porcentajeMutacion; i++) {
+        Iterator it = this.poblacionVieja.getIndividuos().iterator();
+        for (int i = 0; i < this.porcentajeMutacion; i++) {
             Individuo aux = (Individuo) it.next();
-            poblacion.agregarIndividuo(new Individuo(aux.mutacion(), operacion, restricciones));
+            //agregar de forma Sincronizada al nuevo individuo
+            synchronized (this.individuos) {
+                this.individuos.add(new Individuo(aux.mutacion(), this.operacion, this.restricciones));
+                //individuos.notify();
+            }
         }
         //return (individuosResultados);
     }

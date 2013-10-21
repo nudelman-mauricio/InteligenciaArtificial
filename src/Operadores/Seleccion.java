@@ -3,29 +3,30 @@ package Operadores;
 import LogicaNegocios.Individuo;
 import LogicaNegocios.Poblacion;
 import java.util.Random;
+import java.util.Set;
 
-public class Seleccion implements Runnable{
+public class Seleccion implements Runnable {
 
-    Poblacion poblacionVieja;
-    int porcentajeSeleccion;
-    int maximaAptitud;
-    Poblacion poblacion;    
+    private Poblacion poblacionVieja;
+    private int porcentajeSeleccion;
+    private int maximaAptitud;
+    private Set<Individuo> individuos;
     private Random generadorAleatorio;
-    int aleatorio;
+    private int aleatorio;
 
-    public Seleccion(Poblacion poblacion, int porcentajeSeleccion, int maximaAptitud, Poblacion unaPoblacion) {
-        this.poblacionVieja = poblacion;
+    public Seleccion(Poblacion poblacionActual, int porcentajeSeleccion, int maximaAptitud, Set<Individuo> individuos) {
+        this.poblacionVieja = poblacionActual;
         this.porcentajeSeleccion = porcentajeSeleccion;
         this.maximaAptitud = maximaAptitud;
-        this.poblacion = unaPoblacion;
-        this.generadorAleatorio = new Random();        
+        this.individuos = individuos;
+        this.generadorAleatorio = new Random();
     }
 
     @Override
     public void run() {
         //dormirHiloPoblacion(poblacion);
-        
-        System.out.println("seleccion");
+
+        System.out.println("Seleccion");
         double sum = 0;
         //Suma aptitud Poblacion
         for (Individuo aux : poblacionVieja.getIndividuos()) {
@@ -68,21 +69,19 @@ public class Seleccion implements Runnable{
             num = 0;
             for (Individuo aux : poblacionVieja.getIndividuos()) {
                 if (num == pos) {
-                    poblacion.agregarIndividuo(new Individuo(aux));
+                    //agregar de forma Sincronizada al nuevo individuo
+                    synchronized (individuos) {
+                        individuos.add(new Individuo(aux));
+                        //individuos.notify();
+                    }
                 }
                 num++;
             }
-        }        
+        }
     }
-    
+
     private double redondear(double numero, int digitos) {
         int cifras = (int) Math.pow(10, digitos);
         return Math.rint(numero * cifras) / cifras;
-    }
-    
-    private synchronized void dormirHiloPoblacion(Poblacion unaPoblacion){
-        try{
-            unaPoblacion.wait();
-        }catch (Exception ex){}
     }
 }

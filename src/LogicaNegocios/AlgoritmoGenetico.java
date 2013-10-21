@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 public class AlgoritmoGenetico{
 
-    int maximaAptitud;
-    String operacion;
-    int cantIndividuos;
-    int porcentajeSeleccion;
-    int porcentajeCruza;
-    int porcentajeMutacion;
-    double lambda;
-    ArrayList<ArrayList<Integer>> restricciones;    
+    private int maximaAptitud;
+    private String operacion;
+    private int cantIndividuos;
+    private int porcentajeSeleccion;
+    private int porcentajeCruza;
+    private int porcentajeMutacion;
+    private double lambda;
+    private ArrayList<ArrayList<Integer>> restricciones;    
 
    public AlgoritmoGenetico(int maximaAptitud, String operacion, int cantIndividuos, int porcentajeSeleccion, int porcentajeCruza, int porcentajeMutacion, double lambda, ArrayList<ArrayList<Integer>> restricciones) {
         this.maximaAptitud = maximaAptitud;
@@ -37,22 +37,22 @@ public class AlgoritmoGenetico{
 
         //generar poblaciones nuevas a partir de una vieja mientras no se alcance un individuo resultado
         while (poblacionActual.esSolucion() == null) {
-            System.out.println("Población Número: " + poblacionNumero + " Aptitud: " + poblacionActual.aptitudProm() + " %Mutación: " + porcentajeMutacion + " Cantided de porblación: "+ poblacionActual.getIndividuos().size());
+            System.out.println("Población Número: " + poblacionNumero + " Aptitud: " + poblacionActual.aptitudProm() + " %Mutación: " + this.porcentajeMutacion + " Cantided de porblación: "+ poblacionActual.getIndividuos().size());
              
-            poblacionNueva = new Poblacion(cantIndividuos, poblacionActual, restricciones, porcentajeSeleccion, porcentajeCruza, porcentajeMutacion, maximaAptitud);
+            poblacionNueva = new Poblacion(this.cantIndividuos, poblacionActual, this.restricciones, this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion, this.maximaAptitud);
             poblacionActual = poblacionNueva;
             poblacionNumero++;
             
             //calculo de mutacion adaptativa por temperatura ascendente
-            acumulador += lambda * cantIndividuos;
+            acumulador += this.lambda * this.cantIndividuos;
             if (acumulador >= 1) {
-                if (porcentajeMutacion < valorMax) {
-                    porcentajeMutacion += 1; //aumento 4 individuos en mutacion     
-                    porcentajeCruza -= 1; //disminuyo 4individuos en Cruza
+                if (this.porcentajeMutacion < valorMax) {
+                    this.porcentajeMutacion++;   
+                    this.porcentajeCruza--; 
                     acumulador = 0; //Setea devuelta a 0 para solucionar el problema que sumaba siempre 
                 } else {
-                    porcentajeMutacion = valorMax;
-                    porcentajeCruza = (100 - porcentajeMutacion - porcentajeSeleccion);
+                    this.porcentajeMutacion = valorMax;
+                    this.porcentajeCruza = (100 - this.porcentajeMutacion - this.porcentajeSeleccion);
                 }
             }
         }
@@ -60,7 +60,7 @@ public class AlgoritmoGenetico{
         if (poblacionActual.esSolucion() != null) {
             System.out.println("\n" + poblacionActual.esSolucion().toString());
             System.out.println("Cantidad de Iteracciones: " + poblacionNumero);
-            System.out.println("%Seleccion: " + porcentajeSeleccion + " %Cruza: " + (porcentajeCruza * 2) + " %Mutacion: " + porcentajeMutacion + " CantIndividuos: " + poblacionActual.getIndividuos().size());
+            System.out.println("%Seleccion: " + this.porcentajeSeleccion + " %Cruza: " + (this.porcentajeCruza * 2) + " %Mutacion: " + this.porcentajeMutacion + " CantIndividuos: " + poblacionActual.getIndividuos().size());
         }
     }
 }

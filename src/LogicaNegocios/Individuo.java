@@ -62,9 +62,9 @@ public class Individuo implements Comparable {
         }
         this.aptitud = auxAptitud;
     }
-//convierto la operacion de letras en numeros a partir de los genes del individuo
-//peeeero el resultado se calcula a partir de la operacion y no de los genes
 
+    //convierto la operacion de letras en numeros a partir de los genes del individuo
+    //peeeero el resultado se calcula a partir de la operacion y no de los genes
     private String convOperacion(String operacion) {
         //traducir de letras a numeros
         String resultado = "", numResultado = "";
