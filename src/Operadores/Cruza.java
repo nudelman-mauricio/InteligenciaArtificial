@@ -26,8 +26,6 @@ public class Cruza implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Cruza");
-
         char[] padre, madre, hijo1, hijo2;
         boolean bandera, cantidadImpar = false;
         int pos;
@@ -98,7 +96,6 @@ public class Cruza implements Runnable {
             //agregar de forma Sincronizada al nuevo individuo
             synchronized (individuos) {
                 individuos.add(new Individuo(String.copyValueOf(hijo1), operacion, restricciones));
-                System.out.println("agregue en cruza hijo 1");
                 individuos.notify();
             }
 
@@ -106,7 +103,6 @@ public class Cruza implements Runnable {
                 //agregar de forma Sincronizada al nuevo individuo
                 synchronized (individuos) {
                     individuos.add(new Individuo(String.copyValueOf(hijo2), operacion, restricciones));
-                    System.out.println("agregue en cruza hijo 2");
                     individuos.notify();
                 }
             }
@@ -115,11 +111,7 @@ public class Cruza implements Runnable {
 
     private char[] progenitorAleatorio() {
         int cont = 0;
-        char[] progenitor = null;
-        
-        System.out.println(this.poblacionVieja.getIndividuos().size());//--------------------------------------------------------QUITAR
-        
-        
+        char[] progenitor = null;       
         int aleatorio = this.generadorAleatorio.nextInt(this.poblacionVieja.getIndividuos().size());
         for (Individuo aux : this.poblacionVieja.getIndividuos()) {
             if (cont == aleatorio) {

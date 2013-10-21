@@ -23,10 +23,7 @@ public class Mutacion implements Runnable {
     }
 
     @Override
-    public void run() {
-       
-        System.out.println("Mutacion");
-        
+    public void run() {       
         Iterator it = this.poblacionVieja.getIndividuos().iterator();
         for (int i = 0; i < this.porcentajeMutacion; i++) {
             Individuo aux = (Individuo) it.next();
@@ -36,6 +33,5 @@ public class Mutacion implements Runnable {
                 individuos.notify();
             }
         }
-        //return (individuosResultados);
     }
 }

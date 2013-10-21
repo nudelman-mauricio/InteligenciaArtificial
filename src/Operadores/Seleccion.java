@@ -24,9 +24,6 @@ public class Seleccion implements Runnable {
 
     @Override
     public void run() {
-        //dormirHiloPoblacion(poblacion);
-
-        System.out.println("Seleccion");
         double sum = 0;
         //Suma aptitud Poblacion
         for (Individuo aux : poblacionVieja.getIndividuos()) {
@@ -44,8 +41,6 @@ public class Seleccion implements Runnable {
             cont++;
         }
         auxCalculo[poblacionVieja.getIndividuos().size() - 1] += (1000 - sumatoria); //Corrige problema redondeo para el rango
-
-
 
         //Hasta acá es el calculo de los rangos.
 

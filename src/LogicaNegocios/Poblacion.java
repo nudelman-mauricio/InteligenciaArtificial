@@ -14,11 +14,9 @@ public class Poblacion {
 
     private Set<Individuo> individuos = new TreeSet();
     private Random r = new Random();
-    private String operacion;
 
     //Constructor para generar primer poblacion aleatoria
     public Poblacion(String operacion, int cantIndividuos, ArrayList<ArrayList<Integer>> restricciones) {
-        this.operacion = operacion;
         //obtiene 10 letras diferentes a partir de la operacion        
         String unVectorPalabra = vectorPalabraOperacion(operacion);
         //creacion de x cantidad de individuos nuevos y aleatorios
@@ -28,18 +26,17 @@ public class Poblacion {
     }
 
     //Constructor para generar poblaciones nuevas a partir de una anterior utilizando los operadores
-    public Poblacion(int cantIndividuos, Poblacion poblacionActual, ArrayList<ArrayList<Integer>> restricciones, int porcentajeSeleccion, int porcentajeCruza, int porcentajeMutacion, int maximaAptitud) {
+    public Poblacion(String operacion, int cantIndividuos, Poblacion poblacionActual, ArrayList<ArrayList<Integer>> restricciones, int porcentajeSeleccion, int porcentajeCruza, int porcentajeMutacion, int maximaAptitud) {
         
         //Seleccion Ruleta        
         Seleccion unaSeleccion = new Seleccion(poblacionActual, porcentajeSeleccion, maximaAptitud, this.individuos);        
-        //Cruza Ciclica        
-        Cruza unaCruza = new Cruza(poblacionActual, porcentajeCruza, restricciones, this.operacion, this.individuos);       
+        //Cruza Ciclica       
+        Cruza unaCruza = new Cruza(poblacionActual, porcentajeCruza, restricciones, operacion, this.individuos);       
         //Mutacion
-        Mutacion unaMutacion = new Mutacion(poblacionActual, porcentajeMutacion, restricciones, this.operacion, this.individuos);
+        Mutacion unaMutacion = new Mutacion(poblacionActual, porcentajeMutacion, restricciones, operacion, this.individuos);
        
         //metodo que ejecuta los operadores en forma paralela
         ejecutarOperadores(unaSeleccion, unaCruza, unaMutacion);
-        System.out.println("fin llamador");
     }
     
     private void ejecutarOperadores(Seleccion unaSeleccion, Cruza unaCruza, Mutacion unaMutacion){
@@ -48,22 +45,18 @@ public class Poblacion {
         Thread hiloCruza = new Thread(unaCruza, "Cruza");
         Thread hiloMutacion = new Thread(unaMutacion, "Mutacion");
         
-        System.out.println("se crearon los hilos");
-        
         //ejecucion de hilos paralelos
         hiloSeleccion.start();
         hiloCruza.start();
         hiloMutacion.start();
         
         try {
-            System.out.println("esperando....");
             hiloSeleccion.join();
             hiloCruza.join();
             hiloMutacion.join();            
         } catch (InterruptedException ex) {
             Logger.getLogger(Poblacion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("fin espera");
     }
     
     private String vectorPalabraOperacion(String operacion) {

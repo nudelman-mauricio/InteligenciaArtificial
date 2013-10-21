@@ -39,7 +39,7 @@ public class AlgoritmoGenetico{
         while (poblacionActual.esSolucion() == null) {
             System.out.println("Población Número: " + poblacionNumero + " Aptitud: " + poblacionActual.aptitudProm() + " %Mutación: " + this.porcentajeMutacion + " Cantided de porblación: "+ poblacionActual.getIndividuos().size());
              
-            poblacionNueva = new Poblacion(this.cantIndividuos, poblacionActual, this.restricciones, this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion, this.maximaAptitud);
+            poblacionNueva = new Poblacion(operacion, this.cantIndividuos, poblacionActual, this.restricciones, this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion, this.maximaAptitud);
             poblacionActual = poblacionNueva;
             poblacionNumero++;
             
