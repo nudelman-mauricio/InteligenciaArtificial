@@ -1,9 +1,12 @@
 package LogicaNegocios;
 
 import java.util.ArrayList;
+import Interfaz.Ventana;
+import javax.swing.table.DefaultTableModel;
 
 public class AlgoritmoGenetico{
 
+    double []y;
     private int maximaAptitud;
     private String operacion;
     private int cantIndividuos;
@@ -11,7 +14,10 @@ public class AlgoritmoGenetico{
     private int porcentajeCruza;
     private int porcentajeMutacion;
     private double lambda;
-    private ArrayList<ArrayList<Integer>> restricciones;    
+    private ArrayList<ArrayList<Integer>> restricciones;
+    
+    static String[] encabezado= {"Nro Poblacion","Aptiptud Promedio","Porcentaje Seleccion","Porcentaje Cruza","Porcentaje Mutacion"};
+    static DefaultTableModel modelo= new DefaultTableModel(encabezado,0);
 
    public AlgoritmoGenetico(int maximaAptitud, String operacion, int cantIndividuos, int porcentajeSeleccion, int porcentajeCruza, int porcentajeMutacion, double lambda, ArrayList<ArrayList<Integer>> restricciones) {
         this.maximaAptitud = maximaAptitud;
@@ -22,6 +28,7 @@ public class AlgoritmoGenetico{
         this.porcentajeMutacion = porcentajeMutacion;
         this.lambda = lambda;
         this.restricciones = restricciones;
+        this.y = new double [5000];
     }
     
     public void comenzarAlgoritmo () {
@@ -31,13 +38,19 @@ public class AlgoritmoGenetico{
         //Generar primer población ALEATORIA        
         poblacionActual = new Poblacion(operacion, cantIndividuos, restricciones);
         
+        //sssssssssssssssssssssssssssss
+        y[poblacionNumero] = poblacionActual.aptitudProm();
+        
         //para la mutacion por temperatura
         int valorMax = ((int) (0.50 * cantIndividuos));
         double acumulador = 0;       
 
         //generar poblaciones nuevas a partir de una vieja mientras no se alcance un individuo resultado
         while (poblacionActual.esSolucion() == null) {
-            System.out.println("Población Número: " + poblacionNumero + " Aptitud: " + poblacionActual.aptitudProm() + " %Mutación: " + this.porcentajeMutacion + " Cantidad de población: "+ poblacionActual.getIndividuos().size());
+            //System.out.println("Población Número: " + poblacionNumero + " Aptitud: " + poblacionActual.aptitudProm() + " %Mutación: " + this.porcentajeMutacion + " Cantidad de población: "+ poblacionActual.getIndividuos().size());
+            Object datos[] = {poblacionNumero, poblacionActual.aptitudProm(), this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion};
+            modelo.addRow(datos);
+            y[poblacionNumero] = poblacionActual.aptitudProm();
              
             poblacionNueva = new Poblacion(operacion, this.cantIndividuos, poblacionActual, this.restricciones, this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion, this.maximaAptitud);
             poblacionActual = poblacionNueva;
@@ -58,6 +71,8 @@ public class AlgoritmoGenetico{
         }
         //CARTEL GANASTE
         if (poblacionActual.esSolucion() != null) {
+            Ventana.addTabla(modelo);
+            Ventana.graficar(y);
             System.out.println("\n" + poblacionActual.esSolucion().toString());
             System.out.println("Cantidad de Iteracciones: " + poblacionNumero);
             System.out.println("%Seleccion: " + this.porcentajeSeleccion + " %Cruza: " + this.porcentajeCruza + " %Mutacion: " + this.porcentajeMutacion + " CantIndividuos: " + poblacionActual.getIndividuos().size());
