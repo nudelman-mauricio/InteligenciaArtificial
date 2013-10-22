@@ -65,7 +65,7 @@ public class Individuo implements Comparable {
 
     //convierto la operacion de letras en numeros a partir de los genes del individuo
     //peeeero el resultado se calcula a partir de la operacion y no de los genes
-    private String convOperacion(String operacion) {
+    public String convOperacion(String operacion) {
         //traducir de letras a numeros
         String resultado = "", numResultado = "";
         for (int i = 0; i < operacion.length(); i++) {
@@ -86,10 +86,9 @@ public class Individuo implements Comparable {
         }
         //calcular el resultado solamente
         try {
-            numResultado = Long.toString(calcularString(resultado));
+            numResultado = calcularString(resultado);
         } catch (ScriptException ex) {
-            Logger.getLogger(Individuo.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Individuo.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         //rellenar con ceros cuando se pierden por el calculo
@@ -112,7 +111,7 @@ public class Individuo implements Comparable {
      * metodo para calcular el resultado de una expresion matematica definido en
      * un string
      */
-    private static long calcularString(String cadena) throws ScriptException {
+    private static String calcularString(String cadena) throws ScriptException {
         String aux = "";
 
         //Metodo para eliminar los ceros que estan adelante para que pueda calcular correctamente
@@ -142,7 +141,7 @@ public class Individuo implements Comparable {
         ScriptEngine engine = mgr.getEngineByName("JavaScript");
         long resultado = ((Number) engine.eval(aux)).longValue();
 
-        return resultado;
+        return Long.toString(resultado);
     }
 
     @Override

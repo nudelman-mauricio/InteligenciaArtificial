@@ -1,14 +1,12 @@
 package Interfaz;
 
+import LogicaNegocios.Individuo;
+import com.sun.java.swing.plaf.windows.WindowsBorders;
+import java.awt.BasicStroke;
 import javax.swing.table.DefaultTableModel;
-
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -20,152 +18,133 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import javax.swing.SwingWorker;
+import java.util.ArrayList;
+import Archivo.Archivo;
 
 public class Ventana extends javax.swing.JFrame {
 
     static String[] encabezado = {"Valor", "Letra", "Valor", "Letra"};
-    static DefaultTableModel modelo = new DefaultTableModel(encabezado, 0);
+    static DefaultTableModel contenidoTabla = new DefaultTableModel(encabezado, 0);
+    static Archivo unArchivo;
+    static String nuevalinea = System.getProperty("line.separator");
 
     public Ventana() {
         initComponents();
     }
 
-    public static void addTabla(DefaultTableModel modelo) {
-        jTableIteraciones.setModel(modelo);
+    public static void crearTabla(DefaultTableModel contenidoTabla) {
+        jTableIteraciones.setModel(contenidoTabla);
+
+        int row = jTableIteraciones.getRowCount() - 1;
+        Rectangle rect = jTableIteraciones.getCellRect(row, 0, true);
+        jTableIteraciones.scrollRectToVisible(rect);
+        jTableIteraciones.clearSelection();
+        jTableIteraciones.setRowSelectionInterval(row, row);
     }
 
-    public static void resultados(String genes, int numeroPoblacion, String Operacion) {
+    public static void resultados(Individuo unIndividuo, int numeroPoblacion, String operacion) {
         jLabelCantIteraciones.setText(String.valueOf(numeroPoblacion));
-        jLabelOpeResultado.setText(convOperacion(Operacion, genes));
+        jLabelOpeResultado.setText(unIndividuo.convOperacion(operacion));
+
+
+        //ya ni ganas de comentar, arreglense ustedes
+
+        char[] genes = {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#'};
+        for (int i = 0; i < jLabelOpeResultado.getText().length(); i++) {
+            if (!(jLabelOpeResultado.getText().charAt(i) == '=' || jLabelOpeResultado.getText().charAt(i) == '+' || jLabelOpeResultado.getText().charAt(i) == '-' || jLabelOpeResultado.getText().charAt(i) == '/' || jLabelOpeResultado.getText().charAt(i) == '*' || jLabelOpeResultado.getText().charAt(i) == '(' || jLabelOpeResultado.getText().charAt(i) == ')')) {
+                genes[Integer.parseInt(String.valueOf(jLabelOpeResultado.getText().charAt(i)))] = operacion.charAt(i);
+            }
+        }
 
         Object datos[] = new Object[4];
         for (int j = 0; j < 5; j++) {
             datos[0] = j + "-";
-            datos[1] = genes.charAt(j);
+            datos[1] = genes[j];
             datos[2] = j + 5 + "-";
-            datos[3] = genes.charAt(j + 5);
-            modelo.addRow(datos);
-            jTableGenes.setModel(modelo);
+            datos[3] = genes[j + 5];
+            contenidoTabla.addRow(datos);
+            jTableGenes.setModel(contenidoTabla);
         }
 
+        //escribir en archivo los resultados
+        unArchivo.escribirEnArchivo(nuevalinea + "CantIteraciones: " + jLabelCantIteraciones.getText());
+        unArchivo.escribirEnArchivo(nuevalinea + "OperacionCodificada: " + jLabelOpeResultado.getText());
+        unArchivo.escribirEnArchivo(nuevalinea + "Genes: " + String.copyValueOf(genes) + nuevalinea + nuevalinea);
+        unArchivo.cerrarFW();
     }
 
-    private static String convOperacion(String operacion, String genes) {
-        //traducir de letras a numeros
-        String resultado = "", numResultado = "";
-        for (int i = 0; i < operacion.length(); i++) {
-            if (operacion.charAt(i) == '=') {
-                i = operacion.length();
-            }//Corta al encontrar un =
-            else {
-                if (operacion.charAt(i) == '+' || operacion.charAt(i) == '-' || operacion.charAt(i) == '/' || operacion.charAt(i) == '*' || operacion.charAt(i) == '(' || operacion.charAt(i) == ')') {
-                    resultado += String.valueOf(operacion.charAt(i));
-                } else {
-                    for (int j = 0; j < genes.length(); j++) {
-                        if (operacion.charAt(i) == genes.charAt(j)) {
-                            resultado += String.valueOf(j);
-                        }
-                    }
-                }
-            }
-        }
-        //calcular el resultado solamente
-        try {
-            numResultado = Long.toString(calcularString(resultado));
-        } catch (ScriptException ex) {
-            Logger.getLogger(Ventana.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-
-        //rellenar con ceros cuando se pierden por el calculo
-        //luego concatenar lo traducido con el resultado calculado
-        int longResultado = operacion.length() - resultado.length() - 1; // resto uno por el simbolo =
-
-        if (longResultado == numResultado.length()) {
-            resultado += "=" + numResultado;
-        } else {
-            resultado += "=";
-            for (int i = 0; i < longResultado - numResultado.length(); i++) {
-                resultado += "0";
-            }
-            resultado += numResultado;
-        }
-        return (resultado);
+    public static void habilitarCampos(boolean estado) {
+        jTextOperacion.setEnabled(estado);
+        jComboBoxCantidadIndividuos.setEnabled(estado);
+        jTextFieldSeleccion.setEnabled(estado);
+        jTextFieldCruza.setEnabled(estado);
+        jTextFieldMutacion.setEnabled(estado);
+        jButtonCalcular.setEnabled(estado);
     }
 
-    private static long calcularString(String cadena) throws ScriptException {
-        String aux = "";
-
-        //Metodo para eliminar los ceros que estan adelante para que pueda calcular correctamente
-        int num = 0;
-        for (int i = 0; i < cadena.length(); i++) {
-            if (cadena.charAt(i) != '0' || i != num) {
-                aux += cadena.charAt(i);
-                if (cadena.charAt(i) == '+' || cadena.charAt(i) == '-' || cadena.charAt(i) == '*' || cadena.charAt(i) == '/') {
-                    num = i + 1;
-                }
-            } else {
-                //Para que no borre un 0 que tiene solo un digito
-                if (cadena.charAt(i) == '0' && i == (cadena.length() - 1)) {
-                    aux += cadena.charAt(i);
-                } else {
-                    if (cadena.charAt(i + 1) == '+' || cadena.charAt(i + 1) == '-' || cadena.charAt(i + 1) == '*' || cadena.charAt(i + 1) == '/') {
-                        aux += cadena.charAt(i);
-                    } else {
-                        num++;
-                    }
-                }
-
-            }
+    public static void graficar(ArrayList<Double> listaAptitudesPromedio) {
+        //crear serie de pares X,Y para graficar
+        XYSeries unaSerie = new XYSeries("XYGraph");
+        for (int i = 0; (i < listaAptitudesPromedio.size()); i++) {
+            unaSerie.add(i, listaAptitudesPromedio.get(i));
 
         }
-        ScriptEngineManager mgr = new ScriptEngineManager();
-        ScriptEngine engine = mgr.getEngineByName("JavaScript");
-        long resultado = ((Number) engine.eval(aux)).longValue();
 
-        return resultado;
-    }
+        // agregar la serie a la coleccion de series a graficar
+        XYSeriesCollection unaColeccionSeries = new XYSeriesCollection();
+        unaColeccionSeries.addSeries(unaSerie);
 
-    public static void graficar(double[] aptitudProm) {
-        double[] auxiliar;
-        int cont = 0;
-        for (int i = 0; i < aptitudProm.length; i++) {
-            if (aptitudProm[i] == 0 && i != 0) {
-                i = aptitudProm.length;
-            }
-            cont++;
-        }
-        auxiliar = new double[cont];
-        System.arraycopy(aptitudProm, 0, auxiliar, 0, auxiliar.length);
-        XYSeries series = new XYSeries("XYGraph");
-        for (int i = 0; (i < cont); i++) {
-            series.add(i, auxiliar[i]);
-
-        }
-        // Add the series to your data set
-        XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(series);
-        // Generate the graph
+        // crear un contenedor de graficos
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "", // Title
-                "Cantidad Iteraciones", // x-axis Label
-                "Aptitud", // y-axis Label
-                dataset, // Dataset
-                PlotOrientation.VERTICAL, // Plot Orientation
-                false, // Show Legend
-                true, // Use tooltips
-                false // Configure chart to generate URLs?
+                "", // titulo del grafico anulado para ganar espacio
+                "Cantidad Iteraciones", // etiqueta de eje X
+                "Aptitud", // etiqueta de eje Y
+                unaColeccionSeries, // la coleccion de series a graficar
+                PlotOrientation.VERTICAL, // orientacion del grafico
+                false, // leyenda inferior, no mostrar para ahorrar espacio
+                true, // uso de los tooltips
+                false // generar URLs?
                 );
-        // jPanel1 = new ChartPanel (chart);
+
+        // configurar colores
         XYPlot plot = (XYPlot) chart.getPlot();
-        plot.setBackgroundPaint(Color.LIGHT_GRAY);
+        plot.setBackgroundPaint(Color.DARK_GRAY);//LIGHT_GRAY
         plot.setDomainGridlinePaint(Color.white);
         plot.setRangeGridlinePaint(Color.white);
+
+        // graficar el grafico
         XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
-        renderer.setSeriesPaint(0, Color.BLUE);
-        BufferedImage graficoLinea = null;
-        graficoLinea = chart.createBufferedImage(590, 275);
+        renderer.setSeriesPaint(0, Color.RED);
+
+        //comenzar con un trazo de linea ancho para desestimar pequeñas variaciones de aptitud
+        //ir aumentando a medida que las iteraciones crecen para ganar presicion
+        renderer.setSeriesStroke(0, new BasicStroke(7.0f));
+        if (unaSerie.getItemCount() > 100) {
+            renderer.setSeriesStroke(0, new BasicStroke(6.0f));
+        }
+        if (unaSerie.getItemCount() > 200) {
+            renderer.setSeriesStroke(0, new BasicStroke(5.0f));
+        }
+        if (unaSerie.getItemCount() > 300) {
+            renderer.setSeriesStroke(0, new BasicStroke(4.0f));
+        }
+        if (unaSerie.getItemCount() > 400) {
+            renderer.setSeriesStroke(0, new BasicStroke(3.0f));
+        }
+        if (unaSerie.getItemCount() > 500) {
+            renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+        }
+        if (unaSerie.getItemCount() > 600) {
+            renderer.setSeriesStroke(0, new BasicStroke(1.0f));
+        }
+
+        // crear imagen del grafico
+        BufferedImage graficoLinea = chart.createBufferedImage(590, 275);
+
+        // assignar imagen de grafico al label contenedor final
         jLabelGrafica.setIcon(new ImageIcon(graficoLinea));
+
+        // actualizar el contenedor jPanel1 que tiene al label de la imagen del grafico
         jPanel1.updateUI();
     }
 
@@ -213,6 +192,11 @@ public class Ventana extends javax.swing.JFrame {
         setTitle("Inteligencia Artificial II - Alumnos: Dei Castelli, Nudelman y Wiztke - Año: 2013");
         setBounds(new java.awt.Rectangle(200, 50, 0, 0));
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jPanel2.setPreferredSize(new java.awt.Dimension(1050, 602));
 
@@ -233,11 +217,11 @@ public class Ventana extends javax.swing.JFrame {
 
         jLabel2.setText("% Selección");
 
-        jTextFieldSeleccion.setText("20");
+        jTextFieldSeleccion.setText("10");
 
         jLabel3.setText("%Cruza");
 
-        jTextFieldCruza.setText("70");
+        jTextFieldCruza.setText("41");
         jTextFieldCruza.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldCruzaActionPerformed(evt);
@@ -246,7 +230,7 @@ public class Ventana extends javax.swing.JFrame {
 
         jLabel4.setText("%Mutación");
 
-        jTextFieldMutacion.setText("10");
+        jTextFieldMutacion.setText("49");
         jTextFieldMutacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldMutacionActionPerformed(evt);
@@ -375,6 +359,7 @@ public class Ventana extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTableIteraciones.setEnabled(false);
         jScrollPane1.setViewportView(jTableIteraciones);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -436,7 +421,7 @@ public class Ventana extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTableGenes.setPreferredSize(new java.awt.Dimension(300, 80));
+        jTableGenes.setEnabled(false);
         jScrollPane3.setViewportView(jTableGenes);
 
         jLabelCantIteraciones.setFont(new java.awt.Font("Calibri", 3, 14)); // NOI18N
@@ -553,12 +538,25 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCalcularActionPerformed
 
     private void jButtonCalcularMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonCalcularMouseClicked
+        //deshabilitar campos
+        habilitarCampos(false);
+
         //mostrar operacion en panel de resultados
         jLabelOpeOriginal.setText(jTextOperacion.getText());
 
-        //CODIGO PARA LIMPIAR TABLA
+        //grabar en archivo
+        unArchivo = new Archivo();
+        unArchivo.escribirEnArchivo(nuevalinea + "Operacion: " + jTextOperacion.getText());
+        unArchivo.escribirEnArchivo(nuevalinea + "TamañoPoblacion: " + jComboBoxCantidadIndividuos.getSelectedItem().toString());
+        unArchivo.escribirEnArchivo(nuevalinea + "%Seleccion: " + jTextFieldSeleccion.getText());
+        unArchivo.escribirEnArchivo(nuevalinea + "%Cruza: " + jTextFieldCruza.getText());
+        unArchivo.escribirEnArchivo(nuevalinea + "%Mutacion: " + jTextFieldMutacion.getText());
+
+        //limpieza de campos en pestaña resultados
         limpiarTabla(jTableIteraciones);
         limpiarTabla(jTableGenes);
+        jLabelCantIteraciones.setText("");
+        jLabelOpeResultado.setText("");
 
         //llamado especial del metodo comenzarAlgoritmo, lo ejecuta en un hilo diferente por ser muy pesado
         //de esta forma se evita que la interfaz se congele
@@ -576,8 +574,10 @@ public class Ventana extends javax.swing.JFrame {
             }
         };
         worker.execute();
-
     }//GEN-LAST:event_jButtonCalcularMouseClicked
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+    }//GEN-LAST:event_formWindowClosed
 
     public void limpiarTabla(JTable tabla) {
         try {
@@ -627,8 +627,8 @@ public class Ventana extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonCalcular;
-    private javax.swing.JComboBox jComboBoxCantidadIndividuos;
+    private static javax.swing.JButton jButtonCalcular;
+    private static javax.swing.JComboBox jComboBoxCantidadIndividuos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -652,10 +652,10 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private static javax.swing.JTable jTableGenes;
     private static javax.swing.JTable jTableIteraciones;
-    private javax.swing.JTextField jTextFieldCruza;
-    private javax.swing.JTextField jTextFieldMutacion;
+    private static javax.swing.JTextField jTextFieldCruza;
+    private static javax.swing.JTextField jTextFieldMutacion;
     private javax.swing.JTextField jTextFieldMutacion1;
-    private javax.swing.JTextField jTextFieldSeleccion;
-    private javax.swing.JTextField jTextOperacion;
+    private static javax.swing.JTextField jTextFieldSeleccion;
+    private static javax.swing.JTextField jTextOperacion;
     // End of variables declaration//GEN-END:variables
 }
