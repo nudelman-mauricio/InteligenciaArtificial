@@ -19,6 +19,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import javax.swing.SwingWorker;
 
 public class Ventana extends javax.swing.JFrame {
 
@@ -557,14 +558,26 @@ public class Ventana extends javax.swing.JFrame {
         //CODIGO PARA LIMPIAR TABLA
         limpiarTabla(jTableIteraciones);
         limpiarTabla(jTableGenes);
+        
+        //llamado especial del metodo COMENZARalgoritmo, lo ejecuta en un hilo diferente por ser muy pesado
+        //de esta forma se evita que la interfaz se congele
+        final SwingWorker worker = new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                Main.comenzarAlgoritmo(
+                        jTextOperacion.getText(),
+                        Integer.parseInt(jComboBoxCantidadIndividuos.getSelectedItem().toString()),
+                        Integer.parseInt(jTextFieldSeleccion.getText()),
+                        Integer.parseInt(jTextFieldCruza.getText()),
+                        Integer.parseInt(jTextFieldMutacion.getText()),
+                        ((double) 25) / 100000);
+                return null;
+            }
+        };
 
-        Main.comenzarAlgoritmo(
-                jTextOperacion.getText(),
-                Integer.parseInt(jComboBoxCantidadIndividuos.getSelectedItem().toString()),
-                Integer.parseInt(jTextFieldSeleccion.getText()),
-                Integer.parseInt(jTextFieldCruza.getText()),
-                Integer.parseInt(jTextFieldMutacion.getText()),
-                ((double) 25) / 100000);
+        worker.execute();
+
+
 
     }//GEN-LAST:event_jButtonCalcularMouseClicked
 
