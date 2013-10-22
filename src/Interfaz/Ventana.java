@@ -553,13 +553,14 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCalcularActionPerformed
 
     private void jButtonCalcularMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonCalcularMouseClicked
+        //mostrar operacion en panel de resultados
         jLabelOpeOriginal.setText(jTextOperacion.getText());
 
         //CODIGO PARA LIMPIAR TABLA
         limpiarTabla(jTableIteraciones);
         limpiarTabla(jTableGenes);
-        
-        //llamado especial del metodo COMENZARalgoritmo, lo ejecuta en un hilo diferente por ser muy pesado
+
+        //llamado especial del metodo comenzarAlgoritmo, lo ejecuta en un hilo diferente por ser muy pesado
         //de esta forma se evita que la interfaz se congele
         final SwingWorker worker = new SwingWorker() {
             @Override
@@ -574,19 +575,16 @@ public class Ventana extends javax.swing.JFrame {
                 return null;
             }
         };
-
         worker.execute();
-
-
 
     }//GEN-LAST:event_jButtonCalcularMouseClicked
 
     public void limpiarTabla(JTable tabla) {
         try {
-            DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+            DefaultTableModel modeloVacio = (DefaultTableModel) tabla.getModel();
             int filas = tabla.getRowCount();
             for (int i = 0; filas > i; i++) {
-                modelo.removeRow(0);
+                modeloVacio.removeRow(0);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al limpiar la tabla.");
