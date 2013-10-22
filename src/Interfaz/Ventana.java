@@ -1,10 +1,14 @@
-
 package Interfaz;
 
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.swing.ImageIcon;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -16,34 +20,118 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 public class Ventana extends javax.swing.JFrame {
 
+    static String[] encabezado = {"Valor", "Letra", "Valor", "Letra"};
+    static DefaultTableModel modelo = new DefaultTableModel(encabezado, 0);
+
     public Ventana() {
-        initComponents();        
+        initComponents();
     }
 
-    public static void addTabla(DefaultTableModel modelo) {               
-        jTableIteraciones.setModel(modelo);        
+    public static void addTabla(DefaultTableModel modelo) {
+        jTableIteraciones.setModel(modelo);
     }
-    
-    public static void resultados(String gen, int numeroPoblacion, String Operacion) { 
+
+    public static void resultados(String genes, int numeroPoblacion, String Operacion) {
         jLabelCantIteraciones.setText(String.valueOf(numeroPoblacion));
         //Aca falta completar cosas de lucas
+        jLabelOpeResultado.setText(convOperacion(Operacion, genes));
+
+        Object datos[] = {"0-", "hgj", "5-", "gh"};
+        modelo.addRow(datos);
     }
-    
-    public static void graficar(double []aptitudProm){
-        double [] auxiliar ; int cont=0;
-        for(int i=0; i<aptitudProm.length;i++){
-            if(aptitudProm[i] == 0 && i!=0){
-                i=aptitudProm.length;
+
+    private static String convOperacion(String operacion, String genes) {
+        //traducir de letras a numeros
+        String resultado = "", numResultado = "";
+        for (int i = 0; i < operacion.length(); i++) {
+            if (operacion.charAt(i) == '=') {
+                i = operacion.length();
+            }//Corta al encontrar un =
+            else {
+                if (operacion.charAt(i) == '+' || operacion.charAt(i) == '-' || operacion.charAt(i) == '/' || operacion.charAt(i) == '*' || operacion.charAt(i) == '(' || operacion.charAt(i) == ')') {
+                    resultado += String.valueOf(operacion.charAt(i));
+                } else {
+                    for (int j = 0; j < genes.length(); j++) {
+                        if (operacion.charAt(i) == genes.charAt(j)) {
+                            resultado += String.valueOf(j);
+                        }
+                    }
+                }
             }
-            cont++;           
         }
-        auxiliar = new double [cont];
+        //calcular el resultado solamente
+        try {
+            numResultado = Long.toString(calcularString(resultado));
+        } catch (ScriptException ex) {
+            Logger.getLogger(Ventana.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //rellenar con ceros cuando se pierden por el calculo
+        //luego concatenar lo traducido con el resultado calculado
+        int longResultado = operacion.length() - resultado.length() - 1; // resto uno por el simbolo =
+
+        if (longResultado == numResultado.length()) {
+            resultado += "=" + numResultado;
+        } else {
+            resultado += "=";
+            for (int i = 0; i < longResultado - numResultado.length(); i++) {
+                resultado += "0";
+            }
+            resultado += numResultado;
+        }
+        return (resultado);
+    }
+
+    private static long calcularString(String cadena) throws ScriptException {
+        String aux = "";
+
+        //Metodo para eliminar los ceros que estan adelante para que pueda calcular correctamente
+        int num = 0;
+        for (int i = 0; i < cadena.length(); i++) {
+            if (cadena.charAt(i) != '0' || i != num) {
+                aux += cadena.charAt(i);
+                if (cadena.charAt(i) == '+' || cadena.charAt(i) == '-' || cadena.charAt(i) == '*' || cadena.charAt(i) == '/') {
+                    num = i + 1;
+                }
+            } else {
+                //Para que no borre un 0 que tiene solo un digito
+                if (cadena.charAt(i) == '0' && i == (cadena.length() - 1)) {
+                    aux += cadena.charAt(i);
+                } else {
+                    if (cadena.charAt(i + 1) == '+' || cadena.charAt(i + 1) == '-' || cadena.charAt(i + 1) == '*' || cadena.charAt(i + 1) == '/') {
+                        aux += cadena.charAt(i);
+                    } else {
+                        num++;
+                    }
+                }
+
+            }
+
+        }
+        ScriptEngineManager mgr = new ScriptEngineManager();
+        ScriptEngine engine = mgr.getEngineByName("JavaScript");
+        long resultado = ((Number) engine.eval(aux)).longValue();
+
+        return resultado;
+    }
+
+    public static void graficar(double[] aptitudProm) {
+        double[] auxiliar;
+        int cont = 0;
+        for (int i = 0; i < aptitudProm.length; i++) {
+            if (aptitudProm[i] == 0 && i != 0) {
+                i = aptitudProm.length;
+            }
+            cont++;
+        }
+        auxiliar = new double[cont];
         System.arraycopy(aptitudProm, 0, auxiliar, 0, auxiliar.length);
-        XYSeries series = new XYSeries("XYGraph");       
-        for (int i=0; (i<cont);i++){
-            series.add(i,auxiliar[i]);
-            
-        }        
+        XYSeries series = new XYSeries("XYGraph");
+        for (int i = 0; (i < cont); i++) {
+            series.add(i, auxiliar[i]);
+
+        }
         // Add the series to your data set
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series);
@@ -57,13 +145,13 @@ public class Ventana extends javax.swing.JFrame {
                 false, // Show Legend
                 true, // Use tooltips
                 false // Configure chart to generate URLs?
-                );         
-       // jPanel1 = new ChartPanel (chart);
+                );
+        // jPanel1 = new ChartPanel (chart);
         XYPlot plot = (XYPlot) chart.getPlot();
         plot.setBackgroundPaint(Color.LIGHT_GRAY);
         plot.setDomainGridlinePaint(Color.white);
         plot.setRangeGridlinePaint(Color.white);
-        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer)plot.getRenderer();
+        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
         renderer.setSeriesPaint(0, Color.BLUE);
         BufferedImage graficoLinea = null;
         graficoLinea = chart.createBufferedImage(590, 275);
@@ -80,6 +168,8 @@ public class Ventana extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jTextOperacion = new javax.swing.JTextField();
@@ -106,8 +196,23 @@ public class Ventana extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabelOpeResultado = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jLabelCantIteraciones = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        jLabelCantIteraciones = new javax.swing.JLabel();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -151,7 +256,7 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setText("Lamda");
+        jLabel5.setText("Lambda");
 
         jTextFieldMutacion1.setEditable(false);
         jTextFieldMutacion1.setText("0.00025");
@@ -183,17 +288,14 @@ public class Ventana extends javax.swing.JFrame {
                             .addComponent(jLabel4)
                             .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBoxCantidadIndividuos, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jTextFieldMutacion1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                                .addComponent(jTextFieldMutacion, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jTextFieldCruza, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jTextFieldSeleccion, javax.swing.GroupLayout.Alignment.LEADING))))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jButtonCalcular)
-                        .addGap(23, 23, 23)))
-                .addContainerGap(78, Short.MAX_VALUE))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jTextFieldMutacion1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                            .addComponent(jTextFieldMutacion, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldCruza, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldSeleccion, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBoxCantidadIndividuos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jButtonCalcular))
+                .addContainerGap(101, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel7)
@@ -249,8 +351,8 @@ public class Ventana extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabelGrafica, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jLabelGrafica, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 11, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Iteraciones", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 14))); // NOI18N
@@ -260,7 +362,7 @@ public class Ventana extends javax.swing.JFrame {
 
             },
             new String [] {
-                "N° de Iteración", "Aptitud Promedio", "% Selección", "% Cruza", "% Mutacion"
+                "Nro Poblacion", "Aptiptud Promedio", "Cantidad Selección", "Cantidad Cruza", "Cantidad Mutacion"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -279,7 +381,7 @@ public class Ventana extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -293,25 +395,51 @@ public class Ventana extends javax.swing.JFrame {
         jPanel4.setToolTipText("");
 
         jLabel6.setFont(new java.awt.Font("Calibri", 1, 13)); // NOI18N
-        jLabel6.setText("Operación Criptoaritmetica:");
+        jLabel6.setText("Operación:");
 
         jLabelOpeOriginal.setFont(new java.awt.Font("Calibri", 3, 14)); // NOI18N
+        jLabelOpeOriginal.setForeground(new java.awt.Color(255, 0, 0));
         jLabelOpeOriginal.setText(" ");
 
         jLabel8.setFont(new java.awt.Font("Calibri", 1, 13)); // NOI18N
-        jLabel8.setText("Operación Resultante:");
+        jLabel8.setText("Operación Codificada:");
 
         jLabelOpeResultado.setFont(new java.awt.Font("Calibri", 3, 14)); // NOI18N
+        jLabelOpeResultado.setForeground(new java.awt.Color(255, 0, 0));
         jLabelOpeResultado.setText(" ");
 
         jLabel9.setFont(new java.awt.Font("Calibri", 1, 13)); // NOI18N
         jLabel9.setText("Cantidad de Iteraciones:");
 
-        jLabelCantIteraciones.setFont(new java.awt.Font("Calibri", 3, 14)); // NOI18N
-        jLabelCantIteraciones.setText(" ");
-
         jLabel10.setFont(new java.awt.Font("Calibri", 1, 13)); // NOI18N
         jLabel10.setText("Gen Resultante:");
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"0-", null, "5-", null},
+                {"1-", null, "6-", null},
+                {"2-", null, "7-", null},
+                {"3-", null, "8-", null},
+                {"4-", null, "9-", null}
+            },
+            new String [] {
+                "Valor", "Letra", "Valor", "Letra"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable2.setPreferredSize(new java.awt.Dimension(300, 80));
+        jScrollPane3.setViewportView(jTable2);
+
+        jLabelCantIteraciones.setFont(new java.awt.Font("Calibri", 3, 14)); // NOI18N
+        jLabelCantIteraciones.setForeground(new java.awt.Color(255, 0, 0));
+        jLabelCantIteraciones.setText(" ");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -321,21 +449,24 @@ public class Ventana extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelOpeResultado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelOpeOriginal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
                             .addComponent(jLabel8)
+                            .addComponent(jLabel10))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabelOpeResultado, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelOpeOriginal, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(jLabel9)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelCantIteraciones, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel10))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addComponent(jLabelCantIteraciones, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(45, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -353,7 +484,9 @@ public class Ventana extends javax.swing.JFrame {
                     .addComponent(jLabelCantIteraciones))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel10)
-                .addContainerGap(128, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -369,33 +502,34 @@ public class Ventana extends javax.swing.JFrame {
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(15, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1004, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -415,7 +549,7 @@ public class Ventana extends javax.swing.JFrame {
 
     private void jButtonCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCalcularActionPerformed
         jLabelOpeOriginal.setText(jTextOperacion.getText());
-        
+
         Main.comenzarAlgoritmo(
                 jTextOperacion.getText(),
                 Integer.parseInt(jComboBoxCantidadIndividuos.getSelectedItem().toString()),
@@ -423,7 +557,7 @@ public class Ventana extends javax.swing.JFrame {
                 Integer.parseInt(jTextFieldCruza.getText()),
                 Integer.parseInt(jTextFieldMutacion.getText()),
                 ((double) 25) / 100000);
-        
+
     }//GEN-LAST:event_jButtonCalcularActionPerformed
 
     /**
@@ -457,7 +591,7 @@ public class Ventana extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new Ventana().setVisible(true);                
+                new Ventana().setVisible(true);
             }
         });
     }
@@ -477,13 +611,17 @@ public class Ventana extends javax.swing.JFrame {
     private static javax.swing.JLabel jLabelCantIteraciones;
     private static javax.swing.JLabel jLabelGrafica;
     private javax.swing.JLabel jLabelOpeOriginal;
-    private javax.swing.JLabel jLabelOpeResultado;
+    private static javax.swing.JLabel jLabelOpeResultado;
     private static javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private static javax.swing.JTable jTableIteraciones;
     private javax.swing.JTextField jTextFieldCruza;
     private javax.swing.JTextField jTextFieldMutacion;

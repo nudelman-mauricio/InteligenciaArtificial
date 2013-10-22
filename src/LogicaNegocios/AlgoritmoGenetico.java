@@ -16,7 +16,7 @@ public class AlgoritmoGenetico{
     private double lambda;
     private ArrayList<ArrayList<Integer>> restricciones;
     
-    static String[] encabezado= {"Nro Poblacion","Aptiptud Promedio","Porcentaje Seleccion","Porcentaje Cruza","Porcentaje Mutacion"};
+    static String[] encabezado= {"Nro Poblacion","Aptiptud Promedio","Cantidad Selección","Cantidad Cruza","Cantidad Mutación"};
     static DefaultTableModel modelo= new DefaultTableModel(encabezado,0);
 
    public AlgoritmoGenetico(int maximaAptitud, String operacion, int cantIndividuos, int porcentajeSeleccion, int porcentajeCruza, int porcentajeMutacion, double lambda, ArrayList<ArrayList<Integer>> restricciones) {
