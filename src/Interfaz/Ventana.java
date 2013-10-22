@@ -10,6 +10,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
@@ -33,11 +35,18 @@ public class Ventana extends javax.swing.JFrame {
 
     public static void resultados(String genes, int numeroPoblacion, String Operacion) {
         jLabelCantIteraciones.setText(String.valueOf(numeroPoblacion));
-        //Aca falta completar cosas de lucas
         jLabelOpeResultado.setText(convOperacion(Operacion, genes));
 
-        Object datos[] = {"0-", "hgj", "5-", "gh"};
-        modelo.addRow(datos);
+        Object datos[] = new Object[4];
+        for (int j = 0; j < 5; j++) {
+            datos[0] = j + "-";
+            datos[1] = genes.charAt(j);
+            datos[2] = j + 5 + "-";
+            datos[3] = genes.charAt(j + 5);
+            modelo.addRow(datos);
+            jTableGenes.setModel(modelo);
+        }
+
     }
 
     private static String convOperacion(String operacion, String genes) {
@@ -168,8 +177,6 @@ public class Ventana extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jTextOperacion = new javax.swing.JTextField();
@@ -198,23 +205,12 @@ public class Ventana extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        jTableGenes = new javax.swing.JTable();
         jLabelCantIteraciones = new javax.swing.JLabel();
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane2.setViewportView(jTable1);
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Inteligencia Artificial II - Alumnos: Dei Castelli, Nudelman y Wiztke - Año: 2013");
+        setBounds(new java.awt.Rectangle(200, 50, 0, 0));
         setResizable(false);
 
         jPanel2.setPreferredSize(new java.awt.Dimension(1050, 602));
@@ -267,6 +263,11 @@ public class Ventana extends javax.swing.JFrame {
         });
 
         jButtonCalcular.setText("Calcular");
+        jButtonCalcular.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonCalcularMouseClicked(evt);
+            }
+        });
         jButtonCalcular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCalcularActionPerformed(evt);
@@ -412,9 +413,9 @@ public class Ventana extends javax.swing.JFrame {
         jLabel9.setText("Cantidad de Iteraciones:");
 
         jLabel10.setFont(new java.awt.Font("Calibri", 1, 13)); // NOI18N
-        jLabel10.setText("Gen Resultante:");
+        jLabel10.setText("Genes Resultante:");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        jTableGenes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"0-", null, "5-", null},
                 {"1-", null, "6-", null},
@@ -434,8 +435,8 @@ public class Ventana extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable2.setPreferredSize(new java.awt.Dimension(300, 80));
-        jScrollPane3.setViewportView(jTable2);
+        jTableGenes.setPreferredSize(new java.awt.Dimension(300, 80));
+        jScrollPane3.setViewportView(jTableGenes);
 
         jLabelCantIteraciones.setFont(new java.awt.Font("Calibri", 3, 14)); // NOI18N
         jLabelCantIteraciones.setForeground(new java.awt.Color(255, 0, 0));
@@ -548,7 +549,14 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldMutacion1ActionPerformed
 
     private void jButtonCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCalcularActionPerformed
+    }//GEN-LAST:event_jButtonCalcularActionPerformed
+
+    private void jButtonCalcularMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonCalcularMouseClicked
         jLabelOpeOriginal.setText(jTextOperacion.getText());
+
+        //CODIGO PARA LIMPIAR TABLA
+        limpiarTabla(jTableIteraciones);
+        limpiarTabla(jTableGenes);
 
         Main.comenzarAlgoritmo(
                 jTextOperacion.getText(),
@@ -558,7 +566,19 @@ public class Ventana extends javax.swing.JFrame {
                 Integer.parseInt(jTextFieldMutacion.getText()),
                 ((double) 25) / 100000);
 
-    }//GEN-LAST:event_jButtonCalcularActionPerformed
+    }//GEN-LAST:event_jButtonCalcularMouseClicked
+
+    public void limpiarTabla(JTable tabla) {
+        try {
+            DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+            int filas = tabla.getRowCount();
+            for (int i = 0; filas > i; i++) {
+                modelo.removeRow(0);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al limpiar la tabla.");
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -618,10 +638,8 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private static javax.swing.JTable jTableGenes;
     private static javax.swing.JTable jTableIteraciones;
     private javax.swing.JTextField jTextFieldCruza;
     private javax.swing.JTextField jTextFieldMutacion;

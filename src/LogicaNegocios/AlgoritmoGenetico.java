@@ -71,6 +71,9 @@ public class AlgoritmoGenetico{
         }
         //CARTEL GANASTE
         if (poblacionActual.esSolucion() != null) {
+            Object datos[] = {poblacionNumero, poblacionActual.aptitudProm(), this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion};
+            modelo.addRow(datos);
+            
             Ventana.addTabla(modelo);
             Ventana.graficar(y);
             
