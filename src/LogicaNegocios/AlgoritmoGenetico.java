@@ -19,6 +19,7 @@ public class AlgoritmoGenetico {
     private static String[] encabezado = {"Nro Poblacion", "Aptiptud Promedio", "Cantidad Selección", "Cantidad Cruza", "Cantidad Mutación"};
     private static DefaultTableModel contenidoTabla = new DefaultTableModel(encabezado, 0);
     private ArrayList<Double> listaAptitudesPromedio;
+    private boolean parar = false;
 
     public AlgoritmoGenetico(int maximaAptitud, String operacion, int cantIndividuos, int porcentajeSeleccion, int porcentajeCruza, int porcentajeMutacion, double lambda, ArrayList<ArrayList<Integer>> restricciones) {
         this.maximaAptitud = maximaAptitud;
@@ -37,11 +38,14 @@ public class AlgoritmoGenetico {
     }
 
     public void comenzarAlgoritmo() {
+        //Setea la parada en falso
+        parar=false; 
+        
         //Generar primer población ALEATORIA
         this.poblacionActual = new Poblacion(this.operacion, this.cantIndividuos, this.restricciones);
 
         //generar poblaciones nuevas a partir de una vieja mientras no se alcance un individuo resultado
-        while (this.poblacionActual.esSolucion() == null) {
+        while (this.poblacionActual.esSolucion() == null && !parar) {
 
             //mostrar datos en tabla
             Object datos[] = {this.poblacionNumero, poblacionActual.aptitudProm(), this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion};
@@ -85,5 +89,9 @@ public class AlgoritmoGenetico {
 
         //habilitar campos para nueva
         Ventana.habilitarCampos(true);
+    }
+    
+    public void pararAlgoritmo(){
+        this.parar = true;
     }
 }

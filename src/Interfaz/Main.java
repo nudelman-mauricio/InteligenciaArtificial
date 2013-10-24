@@ -75,4 +75,8 @@ public class Main {
         return maximaAptitud;
     }
     
+    public static void pararAlgoritmo(){
+        unAlgoritmoGenetico.pararAlgoritmo();
+    }
+    
 }

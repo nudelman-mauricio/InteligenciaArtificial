@@ -21,6 +21,7 @@ import javax.swing.SwingWorker;
 import java.util.ArrayList;
 import Archivo.Archivo;
 
+
 public class Ventana extends javax.swing.JFrame {
 
     static String[] encabezado = {"Valor", "Letra", "Valor", "Letra"};
@@ -172,6 +173,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jTextFieldMutacion1 = new javax.swing.JTextField();
         jButtonCalcular = new javax.swing.JButton();
+        jButtonParar = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabelGrafica = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -259,34 +261,48 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
 
+        jButtonParar.setText("Parar");
+        jButtonParar.setEnabled(false);
+        jButtonParar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonPararMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextFieldMutacion1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                            .addComponent(jTextFieldMutacion, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldCruza, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldSeleccion, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBoxCantidadIndividuos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButtonCalcular))
-                .addContainerGap(101, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextOperacion)
+                        .addComponent(jTextOperacion))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jTextFieldMutacion1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                                    .addComponent(jTextFieldMutacion, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextFieldCruza, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextFieldSeleccion, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jComboBoxCantidadIndividuos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(55, 55, 55)
+                                .addComponent(jButtonCalcular)
+                                .addGap(49, 49, 49)
+                                .addComponent(jButtonParar)))
+                        .addGap(0, 47, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -317,7 +333,9 @@ public class Ventana extends javax.swing.JFrame {
                     .addComponent(jTextFieldMutacion1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                .addComponent(jButtonCalcular)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonCalcular)
+                    .addComponent(jButtonParar))
                 .addContainerGap())
         );
 
@@ -543,6 +561,9 @@ public class Ventana extends javax.swing.JFrame {
 
         //mostrar operacion en panel de resultados
         jLabelOpeOriginal.setText(jTextOperacion.getText());
+        
+        //Activa el Boton Parar
+        jButtonParar.setEnabled(true);
 
         //grabar en archivo
         unArchivo = new Archivo();
@@ -557,7 +578,8 @@ public class Ventana extends javax.swing.JFrame {
         limpiarTabla(jTableGenes);
         jLabelCantIteraciones.setText("");
         jLabelOpeResultado.setText("");
-
+        
+        
         //llamado especial del metodo comenzarAlgoritmo, lo ejecuta en un hilo diferente por ser muy pesado
         //de esta forma se evita que la interfaz se congele
         final SwingWorker worker = new SwingWorker() {
@@ -578,6 +600,13 @@ public class Ventana extends javax.swing.JFrame {
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
     }//GEN-LAST:event_formWindowClosed
+
+    private void jButtonPararMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonPararMouseClicked
+       Main.pararAlgoritmo();
+       jButtonCalcular.setEnabled(true);
+       jButtonParar.setEnabled(false);
+       habilitarCampos(true);// TODO add your handling code here:
+    }//GEN-LAST:event_jButtonPararMouseClicked
 
     public void limpiarTabla(JTable tabla) {
         try {
@@ -628,6 +657,7 @@ public class Ventana extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private static javax.swing.JButton jButtonCalcular;
+    private javax.swing.JButton jButtonParar;
     private static javax.swing.JComboBox jComboBoxCantidadIndividuos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
