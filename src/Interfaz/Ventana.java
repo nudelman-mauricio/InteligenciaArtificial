@@ -157,8 +157,7 @@ public class Ventana extends javax.swing.JFrame {
         // assignar imagen de grafico al label contenedor final
         jLabelGrafica.setIcon(new ImageIcon(graficoLinea));
 
-        // actualizar el contenedor jPanel1 que tiene al label de la imagen del grafico
-        //jPanel1.updateUI();
+        
     }
 
     /**
@@ -205,6 +204,7 @@ public class Ventana extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Inteligencia Artificial II - Alumnos: Dei Castelli, Nudelman y Wiztke - Año: 2013");
         setBounds(new java.awt.Rectangle(200, 50, 0, 0));
+        setPreferredSize(new java.awt.Dimension(990, 622));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -308,7 +308,7 @@ public class Ventana extends javax.swing.JFrame {
                                     .addComponent(jTextFieldMutacion, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jTextFieldCruza, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jTextFieldSeleccion, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBoxCantidadIndividuos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jComboBoxCantidadIndividuos, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addGap(55, 55, 55)
                                 .addComponent(jButtonCalcular)
