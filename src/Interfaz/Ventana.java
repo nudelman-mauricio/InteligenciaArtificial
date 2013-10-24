@@ -1,7 +1,6 @@
 package Interfaz;
 
 import LogicaNegocios.Individuo;
-import com.sun.java.swing.plaf.windows.WindowsBorders;
 import java.awt.BasicStroke;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
@@ -20,7 +19,9 @@ import org.jfree.data.xy.XYSeriesCollection;
 import javax.swing.SwingWorker;
 import java.util.ArrayList;
 import Archivo.Archivo;
-
+import de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 public class Ventana extends javax.swing.JFrame {
 
@@ -29,8 +30,19 @@ public class Ventana extends javax.swing.JFrame {
     static Archivo unArchivo;
     static String nuevalinea = System.getProperty("line.separator");
 
-    public Ventana() {
+    public Ventana() {        
         initComponents();
+        
+        //Se setea el look and fell
+        try {
+            UIManager.setLookAndFeel(new SyntheticaBlackStarLookAndFeel());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        //Actualiza los cambios
+        SwingUtilities.updateComponentTreeUI(this);
+
     }
 
     public static void crearTabla(DefaultTableModel contenidoTabla) {
@@ -146,7 +158,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabelGrafica.setIcon(new ImageIcon(graficoLinea));
 
         // actualizar el contenedor jPanel1 que tiene al label de la imagen del grafico
-        jPanel1.updateUI();
+        //jPanel1.updateUI();
     }
 
     /**
@@ -561,7 +573,7 @@ public class Ventana extends javax.swing.JFrame {
 
         //mostrar operacion en panel de resultados
         jLabelOpeOriginal.setText(jTextOperacion.getText());
-        
+
         //Activa el Boton Parar
         jButtonParar.setEnabled(true);
 
@@ -578,8 +590,8 @@ public class Ventana extends javax.swing.JFrame {
         limpiarTabla(jTableGenes);
         jLabelCantIteraciones.setText("");
         jLabelOpeResultado.setText("");
-        
-        
+
+
         //llamado especial del metodo comenzarAlgoritmo, lo ejecuta en un hilo diferente por ser muy pesado
         //de esta forma se evita que la interfaz se congele
         final SwingWorker worker = new SwingWorker() {
@@ -602,10 +614,10 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosed
 
     private void jButtonPararMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonPararMouseClicked
-       Main.pararAlgoritmo();
-       jButtonCalcular.setEnabled(true);
-       jButtonParar.setEnabled(false);
-       habilitarCampos(true);// TODO add your handling code here:
+        Main.pararAlgoritmo();
+        jButtonCalcular.setEnabled(true);
+        jButtonParar.setEnabled(false);
+        habilitarCampos(true);// TODO add your handling code here:
     }//GEN-LAST:event_jButtonPararMouseClicked
 
     public void limpiarTabla(JTable tabla) {
