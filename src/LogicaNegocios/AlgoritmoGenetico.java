@@ -85,7 +85,7 @@ public class AlgoritmoGenetico {
         Ventana.graficar(this.listaAptitudesPromedio);
         
         //mostrar solucion en pestaña resultados
-        Ventana.resultados(poblacionActual.esSolucion(), poblacionNumero, this.operacion);
+        Ventana.mostrarResultados(poblacionActual.esSolucion(), poblacionNumero, this.operacion);
 
         //habilitar campos para nueva
         Ventana.habilitarCampos(true);

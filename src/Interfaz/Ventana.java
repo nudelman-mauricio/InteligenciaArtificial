@@ -45,126 +45,6 @@ public class Ventana extends javax.swing.JFrame {
 
     }
 
-    public static void crearTabla(DefaultTableModel contenidoTabla) {
-        jTableIteraciones.setModel(contenidoTabla);
-
-        int row = jTableIteraciones.getRowCount() - 1;
-        Rectangle rect = jTableIteraciones.getCellRect(row, 0, true);
-        jTableIteraciones.scrollRectToVisible(rect);
-        jTableIteraciones.clearSelection();
-        jTableIteraciones.setRowSelectionInterval(row, row);
-    }
-
-    public static void resultados(Individuo unIndividuo, int numeroPoblacion, String operacion) {
-        jLabelCantIteraciones.setText(String.valueOf(numeroPoblacion));
-        jLabelOpeResultado.setText(unIndividuo.convOperacion(operacion));
-
-
-        //ya ni ganas de comentar, arreglense ustedes
-
-        char[] genes = {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
-        for (int i = 0; i < jLabelOpeResultado.getText().length(); i++) {
-            if (!(jLabelOpeResultado.getText().charAt(i) == '=' || jLabelOpeResultado.getText().charAt(i) == '+' || jLabelOpeResultado.getText().charAt(i) == '-' || jLabelOpeResultado.getText().charAt(i) == '/' || jLabelOpeResultado.getText().charAt(i) == '*' || jLabelOpeResultado.getText().charAt(i) == '(' || jLabelOpeResultado.getText().charAt(i) == ')')) {
-                genes[Integer.parseInt(String.valueOf(jLabelOpeResultado.getText().charAt(i)))] = operacion.charAt(i);
-            }
-        }
-
-        Object datos[] = new Object[4];
-        for (int j = 0; j < 5; j++) {
-            datos[0] = j+"-" ;
-            datos[1] = genes[j];
-            datos[2] = j + 5+"-";
-            datos[3] = genes[j + 5];
-            contenidoTabla.addRow(datos);
-            jTableGenes.setModel(contenidoTabla);
-        }
-
-        //escribir en archivo los resultados
-        unArchivo.escribirEnArchivo(nuevalinea + "CantIteraciones: " + jLabelCantIteraciones.getText());
-        unArchivo.escribirEnArchivo(nuevalinea + "OperacionCodificada: " + jLabelOpeResultado.getText());
-        unArchivo.escribirEnArchivo(nuevalinea + "Genes: " + String.copyValueOf(genes) + nuevalinea + nuevalinea);
-        unArchivo.cerrarFW();
-    }
-
-    public static void habilitarCampos(boolean estado) {
-        jTextOperacion.setEnabled(estado);
-        jComboBoxCantidadIndividuos.setEnabled(estado);
-        jTextFieldSeleccion.setEnabled(estado);
-        jTextFieldCruza.setEnabled(estado);
-        jTextFieldMutacion.setEnabled(estado);
-        jButtonCalcular.setEnabled(estado);
-    }
-
-    public static void graficar(ArrayList<Double> listaAptitudesPromedio) {
-        //crear serie de pares X,Y para graficar
-        XYSeries unaSerie = new XYSeries("XYGraph");
-        for (int i = 0; (i < listaAptitudesPromedio.size()); i++) {
-            unaSerie.add(i, listaAptitudesPromedio.get(i));
-
-        }
-
-        // agregar la serie a la coleccion de series a graficar
-        XYSeriesCollection unaColeccionSeries = new XYSeriesCollection();
-        unaColeccionSeries.addSeries(unaSerie);
-
-        // crear un contenedor de graficos
-        JFreeChart chart = ChartFactory.createXYLineChart(
-                "", // titulo del grafico anulado para ganar espacio
-                "Cantidad Iteraciones", // etiqueta de eje X
-                "Aptitud", // etiqueta de eje Y
-                unaColeccionSeries, // la coleccion de series a graficar
-                PlotOrientation.VERTICAL, // orientacion del grafico
-                false, // leyenda inferior, no mostrar para ahorrar espacio
-                true, // uso de los tooltips
-                false // generar URLs?
-                );
-
-        // configurar colores
-        XYPlot plot = (XYPlot) chart.getPlot();
-        plot.setBackgroundPaint(Color.DARK_GRAY);//LIGHT_GRAY
-        plot.setDomainGridlinePaint(Color.white);
-        plot.setRangeGridlinePaint(Color.white);
-
-        // graficar el grafico
-        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
-        renderer.setSeriesPaint(0, Color.RED);
-
-        //comenzar con un trazo de linea ancho para desestimar pequeñas variaciones de aptitud
-        //ir aumentando a medida que las iteraciones crecen para ganar presicion
-        renderer.setSeriesStroke(0, new BasicStroke(7.0f));
-        if (unaSerie.getItemCount() > 100) {
-            renderer.setSeriesStroke(0, new BasicStroke(6.0f));
-        }
-        if (unaSerie.getItemCount() > 200) {
-            renderer.setSeriesStroke(0, new BasicStroke(5.0f));
-        }
-        if (unaSerie.getItemCount() > 300) {
-            renderer.setSeriesStroke(0, new BasicStroke(4.0f));
-        }
-        if (unaSerie.getItemCount() > 400) {
-            renderer.setSeriesStroke(0, new BasicStroke(3.0f));
-        }
-        if (unaSerie.getItemCount() > 500) {
-            renderer.setSeriesStroke(0, new BasicStroke(2.0f));
-        }
-        if (unaSerie.getItemCount() > 600) {
-            renderer.setSeriesStroke(0, new BasicStroke(1.0f));
-        }
-
-        // crear imagen del grafico
-        BufferedImage graficoLinea = chart.createBufferedImage(590, 275);
-
-        // assignar imagen de grafico al label contenedor final
-        jLabelGrafica.setIcon(new ImageIcon(graficoLinea));
-
-        
-    }
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -236,37 +116,17 @@ public class Ventana extends javax.swing.JFrame {
         jLabel3.setText("%Cruza");
 
         jTextFieldCruza.setText("41");
-        jTextFieldCruza.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldCruzaActionPerformed(evt);
-            }
-        });
 
         jLabel4.setText("%Mutación");
 
         jTextFieldMutacion.setText("49");
-        jTextFieldMutacion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldMutacionActionPerformed(evt);
-            }
-        });
 
         jLabel5.setText("Lambda");
 
         jTextFieldMutacion1.setEditable(false);
         jTextFieldMutacion1.setText("0.00025");
-        jTextFieldMutacion1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldMutacion1ActionPerformed(evt);
-            }
-        });
 
         jButtonCalcular.setText("Calcular");
-        jButtonCalcular.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButtonCalcularMouseClicked(evt);
-            }
-        });
         jButtonCalcular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCalcularActionPerformed(evt);
@@ -278,9 +138,9 @@ public class Ventana extends javax.swing.JFrame {
         jButtonParar.setMaximumSize(new java.awt.Dimension(71, 23));
         jButtonParar.setMinimumSize(new java.awt.Dimension(71, 23));
         jButtonParar.setPreferredSize(new java.awt.Dimension(71, 23));
-        jButtonParar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButtonPararMouseClicked(evt);
+        jButtonParar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPararActionPerformed(evt);
             }
         });
 
@@ -547,23 +407,8 @@ public class Ventana extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldCruzaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCruzaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldCruzaActionPerformed
-
-    private void jTextFieldMutacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldMutacionActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldMutacionActionPerformed
-
-    private void jTextFieldMutacion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldMutacion1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldMutacion1ActionPerformed
-
     private void jButtonCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCalcularActionPerformed
-    }//GEN-LAST:event_jButtonCalcularActionPerformed
-
-    private void jButtonCalcularMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonCalcularMouseClicked
-        //deshabilitar campos
+//deshabilitar campos
         habilitarCampos(false);
 
         //mostrar operacion en panel de resultados
@@ -603,33 +448,50 @@ public class Ventana extends javax.swing.JFrame {
             }
         };
         worker.execute();
-    }//GEN-LAST:event_jButtonCalcularMouseClicked
+    }//GEN-LAST:event_jButtonCalcularActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
     }//GEN-LAST:event_formWindowClosed
 
-    private void jButtonPararMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonPararMouseClicked
+    private void jButtonPararActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPararActionPerformed
         Main.pararAlgoritmo();
-        jButtonCalcular.setEnabled(true);
-        jButtonParar.setEnabled(false);
-        habilitarCampos(true);// TODO add your handling code here:
-    }//GEN-LAST:event_jButtonPararMouseClicked
+        habilitarCampos(true);
+    }//GEN-LAST:event_jButtonPararActionPerformed
 
-    public void limpiarTabla(JTable tabla) {
-        try {
-            DefaultTableModel modeloVacio = (DefaultTableModel) tabla.getModel();
-            int filas = tabla.getRowCount();
-            for (int i = 0; filas > i; i++) {
-                modeloVacio.removeRow(0);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al limpiar la tabla.");
-        }
-    }
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private static javax.swing.JButton jButtonCalcular;
+    private static javax.swing.JButton jButtonParar;
+    private static javax.swing.JComboBox jComboBoxCantidadIndividuos;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private static javax.swing.JLabel jLabelCantIteraciones;
+    private static javax.swing.JLabel jLabelGrafica;
+    private javax.swing.JLabel jLabelOpeOriginal;
+    private static javax.swing.JLabel jLabelOpeResultado;
+    private static javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private static javax.swing.JTable jTableGenes;
+    private static javax.swing.JTable jTableIteraciones;
+    private static javax.swing.JTextField jTextFieldCruza;
+    private static javax.swing.JTextField jTextFieldMutacion;
+    private javax.swing.JTextField jTextFieldMutacion1;
+    private static javax.swing.JTextField jTextFieldSeleccion;
+    private static javax.swing.JTextField jTextOperacion;
+    // End of variables declaration//GEN-END:variables
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -662,37 +524,130 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
     }
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private static javax.swing.JButton jButtonCalcular;
-    private javax.swing.JButton jButtonParar;
-    private static javax.swing.JComboBox jComboBoxCantidadIndividuos;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private static javax.swing.JLabel jLabelCantIteraciones;
-    private static javax.swing.JLabel jLabelGrafica;
-    private javax.swing.JLabel jLabelOpeOriginal;
-    private static javax.swing.JLabel jLabelOpeResultado;
-    private static javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane3;
-    private static javax.swing.JTable jTableGenes;
-    private static javax.swing.JTable jTableIteraciones;
-    private static javax.swing.JTextField jTextFieldCruza;
-    private static javax.swing.JTextField jTextFieldMutacion;
-    private javax.swing.JTextField jTextFieldMutacion1;
-    private static javax.swing.JTextField jTextFieldSeleccion;
-    private static javax.swing.JTextField jTextOperacion;
-    // End of variables declaration//GEN-END:variables
+    
+    public static void crearTabla(DefaultTableModel contenidoTabla) {
+        jTableIteraciones.setModel(contenidoTabla);
+
+        int row = jTableIteraciones.getRowCount() - 1;
+        Rectangle rect = jTableIteraciones.getCellRect(row, 0, true);
+        jTableIteraciones.scrollRectToVisible(rect);
+        jTableIteraciones.clearSelection();
+        jTableIteraciones.setRowSelectionInterval(row, row);
+    }
+
+    public void limpiarTabla(JTable tabla) {
+        try {
+            DefaultTableModel modeloVacio = (DefaultTableModel) tabla.getModel();
+            int filas = tabla.getRowCount();
+            for (int i = 0; filas > i; i++) {
+                modeloVacio.removeRow(0);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al limpiar la tabla.");
+        }
+    }
+    
+    public static void mostrarResultados(Individuo unIndividuo, int numeroPoblacion, String operacion) {
+        jLabelCantIteraciones.setText(String.valueOf(numeroPoblacion));
+        jLabelOpeResultado.setText(unIndividuo.convOperacion(operacion));
+
+
+        //ya ni ganas de comentar, arreglense ustedes
+
+        char[] genes = {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
+        for (int i = 0; i < jLabelOpeResultado.getText().length(); i++) {
+            if (!(jLabelOpeResultado.getText().charAt(i) == '=' || jLabelOpeResultado.getText().charAt(i) == '+' || jLabelOpeResultado.getText().charAt(i) == '-' || jLabelOpeResultado.getText().charAt(i) == '/' || jLabelOpeResultado.getText().charAt(i) == '*' || jLabelOpeResultado.getText().charAt(i) == '(' || jLabelOpeResultado.getText().charAt(i) == ')')) {
+                genes[Integer.parseInt(String.valueOf(jLabelOpeResultado.getText().charAt(i)))] = operacion.charAt(i);
+            }
+        }
+
+        Object datos[] = new Object[4];
+        for (int j = 0; j < 5; j++) {
+            datos[0] = j+"-" ;
+            datos[1] = genes[j];
+            datos[2] = j + 5+"-";
+            datos[3] = genes[j + 5];
+            contenidoTabla.addRow(datos);
+            jTableGenes.setModel(contenidoTabla);
+        }
+
+        //escribir en archivo los resultados
+        unArchivo.escribirEnArchivo(nuevalinea + "CantIteraciones: " + jLabelCantIteraciones.getText());
+        unArchivo.escribirEnArchivo(nuevalinea + "OperacionCodificada: " + jLabelOpeResultado.getText());
+        unArchivo.escribirEnArchivo(nuevalinea + "Genes: " + String.copyValueOf(genes) + nuevalinea + nuevalinea);
+        unArchivo.cerrarFW();
+    }
+
+    public static void habilitarCampos(boolean estado) {
+        jTextOperacion.setEnabled(estado);
+        jComboBoxCantidadIndividuos.setEnabled(estado);
+        jTextFieldSeleccion.setEnabled(estado);
+        jTextFieldCruza.setEnabled(estado);
+        jTextFieldMutacion.setEnabled(estado);
+        jButtonCalcular.setEnabled(estado);
+        jButtonParar.setEnabled(!estado);
+    }
+
+    public static void graficar(ArrayList<Double> listaAptitudesPromedio) {
+        //crear serie de pares X,Y para graficar
+        XYSeries unaSerie = new XYSeries("XYGraph");
+        for (int i = 0; (i < listaAptitudesPromedio.size()); i++) {
+            unaSerie.add(i, listaAptitudesPromedio.get(i));
+
+        }
+
+        // agregar la serie a la coleccion de series a graficar
+        XYSeriesCollection unaColeccionSeries = new XYSeriesCollection();
+        unaColeccionSeries.addSeries(unaSerie);
+
+        // crear un contenedor de graficos
+        JFreeChart chart = ChartFactory.createXYLineChart(
+                "", // titulo del grafico anulado para ganar espacio
+                "Cantidad Iteraciones", // etiqueta de eje X
+                "Aptitud", // etiqueta de eje Y
+                unaColeccionSeries, // la coleccion de series a graficar
+                PlotOrientation.VERTICAL, // orientacion del grafico
+                false, // leyenda inferior, no mostrar para ahorrar espacio
+                true, // uso de los tooltips
+                false // generar URLs?
+                );
+
+        // configurar colores
+        XYPlot plot = (XYPlot) chart.getPlot();
+        plot.setBackgroundPaint(Color.DARK_GRAY);//LIGHT_GRAY
+        plot.setDomainGridlinePaint(Color.white);
+        plot.setRangeGridlinePaint(Color.white);
+
+        // graficar el grafico
+        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
+        renderer.setSeriesPaint(0, Color.RED);
+
+        //comenzar con un trazo de linea ancho para desestimar pequeñas variaciones de aptitud
+        //ir aumentando a medida que las iteraciones crecen para ganar presicion
+        renderer.setSeriesStroke(0, new BasicStroke(7.0f));
+        if (unaSerie.getItemCount() > 100) {
+            renderer.setSeriesStroke(0, new BasicStroke(6.0f));
+        }
+        if (unaSerie.getItemCount() > 200) {
+            renderer.setSeriesStroke(0, new BasicStroke(5.0f));
+        }
+        if (unaSerie.getItemCount() > 300) {
+            renderer.setSeriesStroke(0, new BasicStroke(4.0f));
+        }
+        if (unaSerie.getItemCount() > 400) {
+            renderer.setSeriesStroke(0, new BasicStroke(3.0f));
+        }
+        if (unaSerie.getItemCount() > 500) {
+            renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+        }
+        if (unaSerie.getItemCount() > 600) {
+            renderer.setSeriesStroke(0, new BasicStroke(1.0f));
+        }
+
+        // crear imagen del grafico
+        BufferedImage graficoLinea = chart.createBufferedImage(590, 275);
+
+        // assignar imagen de grafico al label contenedor final
+        jLabelGrafica.setIcon(new ImageIcon(graficoLinea));        
+    }
 }
