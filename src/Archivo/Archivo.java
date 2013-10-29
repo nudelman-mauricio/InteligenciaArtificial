@@ -10,7 +10,7 @@ public class Archivo {
     private FileWriter fw;
 
     public Archivo() {
-        archivo = new File("/c:/prueba.txt");//"/home/nico/prueba.txt"
+        archivo = new File("/d:/prueba.txt");//"/home/nico/prueba.txt"
         try {
             fw = new FileWriter(archivo,true);
         } catch (IOException e) {

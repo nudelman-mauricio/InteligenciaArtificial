@@ -88,10 +88,27 @@ public class Cruza implements Runnable {
                     hijo2[i] = padre[i];
                 }
             }
-
+            
             //quitar los numeros y volver a poner #
             hijo1 = ponerNumerales(hijo1);
-            hijo2 = ponerNumerales(hijo2);            
+            hijo2 = ponerNumerales(hijo2);
+            
+            char[] aux1 = {'1', '-', '2', '3'};
+            char[] aux2 = {'1', '-', '2', '3'};
+            System.out.println(aux1.equals(aux1));
+            
+            aux1.
+            
+            //comparar que el hijo1 sea distinto de la madre, caso contrario los hijos son iguales a sus padres
+            if (hijo1.equals(madre)) {
+                System.out.println(hijo1 + " - " + madre);
+                System.out.println(hijo2 + " - " + padre);
+            }
+            if (hijo1.equals(padre)) {
+                System.out.println(hijo1 + " - " + madre);
+                System.out.println(hijo2 + " - " + padre);
+            }
+            
 
             //agregar de forma Sincronizada al nuevo individuo
             synchronized (individuos) {
@@ -111,7 +128,7 @@ public class Cruza implements Runnable {
 
     private char[] progenitorAleatorio() {
         int cont = 0;
-        char[] progenitor = null;       
+        char[] progenitor = null;
         int aleatorio = this.generadorAleatorio.nextInt(this.poblacionVieja.getIndividuos().size());
         for (Individuo aux : this.poblacionVieja.getIndividuos()) {
             if (cont == aleatorio) {

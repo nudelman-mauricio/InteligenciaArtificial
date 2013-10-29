@@ -115,11 +115,11 @@ public class Ventana extends javax.swing.JFrame {
 
         jLabel3.setText("%Cruza");
 
-        jTextFieldCruza.setText("41");
+        jTextFieldCruza.setText("40");
 
         jLabel4.setText("%Mutación");
 
-        jTextFieldMutacion.setText("49");
+        jTextFieldMutacion.setText("50");
 
         jLabel5.setText("Lambda");
 
