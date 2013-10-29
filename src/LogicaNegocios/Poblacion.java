@@ -1,5 +1,6 @@
 package LogicaNegocios;
 
+import Interfaz.Ventana;
 import Operadores.Seleccion;
 import Operadores.Cruza;
 import Operadores.Mutacion;
@@ -23,6 +24,7 @@ public class Poblacion {
         //creacion de x cantidad de individuos nuevos y aleatorios
         for (int i = 0; i < cantIndividuos; i++) {         
             this.individuos.add(new Individuo(mezclaVector(unVectorPalabra), operacion, restricciones));
+            Ventana.cargarBarra(individuos.size());
         }
     }
 
