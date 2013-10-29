@@ -30,16 +30,16 @@ public class Ventana extends javax.swing.JFrame {
     static Archivo unArchivo;
     static String nuevalinea = System.getProperty("line.separator");
 
-    public Ventana() {        
+    public Ventana() {
         initComponents();
-        
+
         //Se setea el look and fell
         try {
             UIManager.setLookAndFeel(new SyntheticaBlackStarLookAndFeel());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         //Actualiza los cambios
         SwingUtilities.updateComponentTreeUI(this);
 
@@ -67,6 +67,7 @@ public class Ventana extends javax.swing.JFrame {
         jButtonParar = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabelGrafica = new javax.swing.JLabel();
+        jProgressBar1 = new javax.swing.JProgressBar();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableIteraciones = new javax.swing.JTable();
@@ -223,12 +224,14 @@ public class Ventana extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabelGrafica, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
                 .addContainerGap())
+            .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabelGrafica, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                .addGap(0, 11, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Iteraciones", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 14))); // NOI18N
@@ -379,7 +382,7 @@ public class Ventana extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -400,7 +403,7 @@ public class Ventana extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -408,15 +411,16 @@ public class Ventana extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCalcularActionPerformed
-//deshabilitar campos
+        //deshabilitar campos
         habilitarCampos(false);
 
         //mostrar operacion en panel de resultados
         jLabelOpeOriginal.setText(jTextOperacion.getText());
-
-        //Activa el Boton Parar
-        jButtonParar.setEnabled(true);
-
+        
+        //setear tamaño de barra de progreso
+        jProgressBar1.setMaximum(Integer.parseInt(jComboBoxCantidadIndividuos.getSelectedItem().toString()));
+        jProgressBar1.setMinimum(0);
+        
         //grabar en archivo
         unArchivo = new Archivo();
         unArchivo.escribirEnArchivo(nuevalinea + "Operacion: " + jTextOperacion.getText());
@@ -457,7 +461,6 @@ public class Ventana extends javax.swing.JFrame {
         Main.pararAlgoritmo();
         habilitarCampos(true);
     }//GEN-LAST:event_jButtonPararActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private static javax.swing.JButton jButtonCalcular;
     private static javax.swing.JButton jButtonParar;
@@ -481,6 +484,7 @@ public class Ventana extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private static javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private static javax.swing.JTable jTableGenes;
@@ -524,7 +528,7 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
     }
-    
+
     public static void crearTabla(DefaultTableModel contenidoTabla) {
         jTableIteraciones.setModel(contenidoTabla);
 
@@ -546,7 +550,7 @@ public class Ventana extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error al limpiar la tabla.");
         }
     }
-    
+
     public static void mostrarResultados(Individuo unIndividuo, int numeroPoblacion, String operacion) {
         jLabelCantIteraciones.setText(String.valueOf(numeroPoblacion));
         jLabelOpeResultado.setText(unIndividuo.convOperacion(operacion));
@@ -563,9 +567,9 @@ public class Ventana extends javax.swing.JFrame {
 
         Object datos[] = new Object[4];
         for (int j = 0; j < 5; j++) {
-            datos[0] = j+"-" ;
+            datos[0] = j + "-";
             datos[1] = genes[j];
-            datos[2] = j + 5+"-";
+            datos[2] = j + 5 + "-";
             datos[3] = genes[j + 5];
             contenidoTabla.addRow(datos);
             jTableGenes.setModel(contenidoTabla);
@@ -648,6 +652,10 @@ public class Ventana extends javax.swing.JFrame {
         BufferedImage graficoLinea = chart.createBufferedImage(590, 275);
 
         // assignar imagen de grafico al label contenedor final
-        jLabelGrafica.setIcon(new ImageIcon(graficoLinea));        
+        jLabelGrafica.setIcon(new ImageIcon(graficoLinea));
+    }
+    
+    public static void cargarBarra(int posicion){
+        jProgressBar1.setValue(posicion);
     }
 }

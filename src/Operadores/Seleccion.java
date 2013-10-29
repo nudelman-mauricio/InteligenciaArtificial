@@ -2,7 +2,6 @@ package Operadores;
 
 import LogicaNegocios.Individuo;
 import LogicaNegocios.Poblacion;
-import java.util.TreeSet;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
@@ -30,7 +29,6 @@ public class Seleccion implements Runnable {
         //determinar cantidades, si es par, hace 50/50
         //si son impares se hace un mas por Ruleta
         int cantidadRuleta, cantidadElitista;
-        System.out.println(porcentajeSeleccion);
         if (this.porcentajeSeleccion % 2 != 0) {
             cantidadRuleta=((int)(porcentajeSeleccion/2))+1;
             cantidadElitista=cantidadRuleta-1;            
@@ -106,7 +104,7 @@ public class Seleccion implements Runnable {
     }
 
     private void seleccionElitista(int cantidad) {
-        Iterator it = this.poblacionVieja.iterator();
+        Iterator it = this.poblacionVieja.getIndividuos().iterator();
         Individuo unIndividuo;
         for (int i = 0; i < cantidad; i++) {
             unIndividuo = new Individuo((Individuo) it.next());
