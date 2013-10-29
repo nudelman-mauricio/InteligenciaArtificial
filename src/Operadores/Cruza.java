@@ -105,7 +105,7 @@ public class Cruza implements Runnable {
                 unHijo2.mutarme();
             }
 
-            //agregar de forma Sincronizada al nuevo individuo
+            //agregar de forma Sincronizada al nuevo individuo hijo1
             synchronized (individuos) {
                 individuos.add(unHijo1);
                 individuos.notify();

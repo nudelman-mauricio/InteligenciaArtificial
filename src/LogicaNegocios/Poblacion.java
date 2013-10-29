@@ -4,6 +4,7 @@ import Operadores.Seleccion;
 import Operadores.Cruza;
 import Operadores.Mutacion;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Random;
@@ -119,4 +120,8 @@ public class Poblacion {
     public Set<Individuo> getIndividuos() {
         return this.individuos;
     }      
+
+    public Iterator iterator() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

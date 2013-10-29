@@ -2,6 +2,8 @@ package Operadores;
 
 import LogicaNegocios.Individuo;
 import LogicaNegocios.Poblacion;
+import java.util.TreeSet;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
 
@@ -24,9 +26,37 @@ public class Seleccion implements Runnable {
 
     @Override
     public void run() {
+        
+        //determinar cantidades, si es par, hace 50/50
+        //si son impares se hace un mas por Ruleta
+        int cantidadRuleta, cantidadElitista;
+        System.out.println(porcentajeSeleccion);
+        if (this.porcentajeSeleccion % 2 != 0) {
+            cantidadRuleta=((int)(porcentajeSeleccion/2))+1;
+            cantidadElitista=cantidadRuleta-1;            
+        }
+        else{
+            cantidadRuleta=porcentajeSeleccion/2;
+            cantidadElitista=cantidadRuleta;
+        }
+        
+        //selecccion por Ruleta
+        seleccionRuleta(cantidadRuleta);
+
+        //seleccion Elitista
+        seleccionElitista(cantidadElitista);
+    }
+
+    private double redondear(double numero, int digitos) {
+        int cifras = (int) Math.pow(10, digitos);
+        return Math.rint(numero * cifras) / cifras;
+    }
+
+    private void seleccionRuleta(int cantidad) {
+        
+        //Suma aptitud total Poblacion
         double sum = 0;
-        //Suma aptitud Poblacion
-        for (Individuo aux : poblacionVieja.getIndividuos()) {
+        for (Individuo aux : this.poblacionVieja.getIndividuos()) {
             sum += (maximaAptitud - (aux.getAptitud() + 1));
         }
 
@@ -46,7 +76,7 @@ public class Seleccion implements Runnable {
 
         //Seleccion
         int pos, num;
-        for (int i = 0; i < porcentajeSeleccion; i++) {
+        for (int i = 0; i < cantidad; i++) {
             aleatorio = generadorAleatorio.nextInt(1000);
             pos = 0;
             for (int j = 0; j < poblacionVieja.getIndividuos().size(); j++) {
@@ -75,8 +105,15 @@ public class Seleccion implements Runnable {
         }
     }
 
-    private double redondear(double numero, int digitos) {
-        int cifras = (int) Math.pow(10, digitos);
-        return Math.rint(numero * cifras) / cifras;
+    private void seleccionElitista(int cantidad) {
+        Iterator it = this.poblacionVieja.iterator();
+        Individuo unIndividuo;
+        for (int i = 0; i < cantidad; i++) {
+            unIndividuo = new Individuo((Individuo) it.next());
+            synchronized (individuos) {
+                individuos.add(unIndividuo);
+                individuos.notify();
+            }
+        }
     }
 }
