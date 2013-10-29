@@ -46,9 +46,10 @@ public class Cruza implements Runnable {
             padre = progenitorAleatorio();
             madre = progenitorAleatorio();
             //bucle para asegurarse de tener dos progenitores diferentes entre si
-            while (padre == madre) {
+            while (sonIguales(padre,madre)) {
                 madre = progenitorAleatorio();
             }
+
             //sacar # para que no existan caracteres repetidos en cada progenitor
             padre = quitarNumerales(padre);
             madre = quitarNumerales(madre);
@@ -88,27 +89,12 @@ public class Cruza implements Runnable {
                     hijo2[i] = padre[i];
                 }
             }
-            
+
             //quitar los numeros y volver a poner #
             hijo1 = ponerNumerales(hijo1);
             hijo2 = ponerNumerales(hijo2);
             
-            char[] aux1 = {'1', '-', '2', '3'};
-            char[] aux2 = {'1', '-', '2', '3'};
-            System.out.println(aux1.equals(aux1));
-            
-            aux1.
-            
-            //comparar que el hijo1 sea distinto de la madre, caso contrario los hijos son iguales a sus padres
-            if (hijo1.equals(madre)) {
-                System.out.println(hijo1 + " - " + madre);
-                System.out.println(hijo2 + " - " + padre);
-            }
-            if (hijo1.equals(padre)) {
-                System.out.println(hijo1 + " - " + madre);
-                System.out.println(hijo2 + " - " + padre);
-            }
-            
+            System.out.println(sonIguales(hijo1,hijo2));
 
             //agregar de forma Sincronizada al nuevo individuo
             synchronized (individuos) {
@@ -116,6 +102,8 @@ public class Cruza implements Runnable {
                 individuos.notify();
             }
 
+            //agregar segundo hijo de forma sincronizada, pero solo si la cantidad de hijos solicitada es par,
+            //de lo contrario ignora al segundo hijo
             if (!((cantidadImpar) && (j + 1 == (porcentajeCruza / 2)))) {
                 //agregar de forma Sincronizada al nuevo individuo
                 synchronized (individuos) {
@@ -159,5 +147,17 @@ public class Cruza implements Runnable {
             }
         }
         return genes;
+    }
+
+    //compara dos arreglos de caracteres, retorna TRUE si son iguales
+    private boolean sonIguales(char[] unArreglo, char[] otroArreglo) {
+        boolean resultado = true;
+        for (int i = 0; i < 10; i++) {
+            if (unArreglo[i] != otroArreglo[i]) {
+                resultado = false;
+                i=10;
+            }
+        }
+        return resultado;
     }
 }

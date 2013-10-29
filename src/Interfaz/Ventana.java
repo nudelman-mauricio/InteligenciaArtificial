@@ -603,7 +603,7 @@ public class Ventana extends javax.swing.JFrame {
         // crear un contenedor de graficos
         JFreeChart chart = ChartFactory.createXYLineChart(
                 "", // titulo del grafico anulado para ganar espacio
-                "Cantidad Iteraciones", // etiqueta de eje X
+                "Generaciones", // etiqueta de eje X
                 "Aptitud", // etiqueta de eje Y
                 unaColeccionSeries, // la coleccion de series a graficar
                 PlotOrientation.VERTICAL, // orientacion del grafico
