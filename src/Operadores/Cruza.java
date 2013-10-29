@@ -93,27 +93,21 @@ public class Cruza implements Runnable {
             //quitar los numeros y volver a poner #
             hijo1 = ponerNumerales(hijo1);
             hijo2 = ponerNumerales(hijo2);
+            padre = ponerNumerales(padre);
 
-            //-----------------------------------------------------------BORRAR---------------------------------------------------
-            padre=ponerNumerales(padre);
-            madre=ponerNumerales(madre);
-            if (sonIguales(hijo1, madre)) {
-                System.out.println("SON IGUALES HIJO1 y MADRE");
-            }
+            //creacion de nuevos individuos
+            Individuo unHijo1 = new Individuo(String.copyValueOf(hijo1), operacion, restricciones);
+            Individuo unHijo2 = new Individuo(String.copyValueOf(hijo2), operacion, restricciones);
+
+            //en el caso de que los individuos nuevos sean iguales a sus padres se los muta
             if (sonIguales(hijo1, padre)) {
-                System.out.println("SON IGUALES HIJO1 y PADRE");
+                unHijo1.mutarme();
+                unHijo2.mutarme();
             }
-            if (sonIguales(hijo2, madre)) {
-                System.out.println("SON IGUALES HIJO2 y MADRE");
-            }
-            if (sonIguales(hijo2, padre)) {
-                System.out.println("SON IGUALES HIJO2 y PADRE");
-            }
-            //-----------------------------------------------------------------------------------------------------------------------
 
             //agregar de forma Sincronizada al nuevo individuo
             synchronized (individuos) {
-                individuos.add(new Individuo(String.copyValueOf(hijo1), operacion, restricciones));
+                individuos.add(unHijo1);
                 individuos.notify();
             }
 
@@ -122,7 +116,7 @@ public class Cruza implements Runnable {
             if (!((cantidadImpar) && (j + 1 == (porcentajeCruza / 2)))) {
                 //agregar de forma Sincronizada al nuevo individuo
                 synchronized (individuos) {
-                    individuos.add(new Individuo(String.copyValueOf(hijo2), operacion, restricciones));
+                    individuos.add(unHijo2);
                     individuos.notify();
                 }
             }

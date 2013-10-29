@@ -166,6 +166,10 @@ public class Individuo implements Comparable {
     public String getGenes() {
         return this.genes;
     }
+    
+    public void mutarme() {
+        this.genes=mutacion();
+    }
 
     public String mutacion() {
         Random r = new Random();
