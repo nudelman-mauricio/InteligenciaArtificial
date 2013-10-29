@@ -38,9 +38,14 @@ public class AlgoritmoGenetico {
     }
 
     public void comenzarAlgoritmo() {
+        double promedioCruza = 0, promedioMutacion = 0;
+
         //Setea la parada en falso
-        parar=false; 
-        
+        parar = false;
+
+        //guardar tiempo en que comenzó la ejecucion del algoritmo
+        double startTime = System.currentTimeMillis() * 0.001;
+
         //Generar primer población ALEATORIA
         this.poblacionActual = new Poblacion(this.operacion, this.cantIndividuos, this.restricciones);
 
@@ -48,7 +53,7 @@ public class AlgoritmoGenetico {
         while (this.poblacionActual.esSolucion() == null && !parar) {
             //cargar barra de progreso
             Ventana.cargarBarra(this.poblacionNumero);
-            
+
             //mostrar datos en tabla
             Object datos[] = {this.poblacionNumero, poblacionActual.aptitudProm(), this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion};
             this.contenidoTabla.addRow(datos);
@@ -75,25 +80,34 @@ public class AlgoritmoGenetico {
                     this.porcentajeCruza = (this.cantIndividuos - this.porcentajeMutacion - this.porcentajeSeleccion);
                 }
             }
+            promedioCruza += this.porcentajeCruza;
+            promedioMutacion += this.porcentajeMutacion;
         }
+        //obtener tiempo en el que finalizó la ejecucion del algoritmo, por encontrar solucion o por parada forzosa
+        double stopTime = System.currentTimeMillis() * 0.001;
 
         //mostrar tabla
         Object datos[] = {poblacionNumero, poblacionActual.aptitudProm(), this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion};
         this.contenidoTabla.addRow(datos);
         Ventana.crearTabla(this.contenidoTabla);
-        
+
         //mostrar gráfico
         this.listaAptitudesPromedio.add(poblacionActual.aptitudProm());
         Ventana.graficar(this.listaAptitudesPromedio);
-        
+
+        //calculo de promedio de operadores
+        promedioCruza = promedioCruza / (poblacionNumero-1);
+        promedioMutacion = promedioMutacion / (poblacionNumero-1);
+
         //mostrar solucion en pestaña resultados
-        Ventana.mostrarResultados(poblacionActual.esSolucion(), poblacionNumero, this.operacion);
+        Ventana.mostrarResultados(poblacionActual.esSolucion(), poblacionNumero, this.operacion, Double.toString(Math.rint((stopTime - startTime) * 100) / 100), String.valueOf(this.porcentajeSeleccion), String.valueOf(promedioCruza), String.valueOf(promedioMutacion));
 
         //habilitar campos para nueva
         Ventana.habilitarCampos(true);
+
     }
-    
-    public void pararAlgoritmo(){
+
+    public void pararAlgoritmo() {
         this.parar = true;
     }
 }
