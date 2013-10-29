@@ -46,7 +46,7 @@ public class Cruza implements Runnable {
             padre = progenitorAleatorio();
             madre = progenitorAleatorio();
             //bucle para asegurarse de tener dos progenitores diferentes entre si
-            while (sonIguales(padre,madre)) {
+            while (sonIguales(padre, madre)) {
                 madre = progenitorAleatorio();
             }
 
@@ -93,8 +93,23 @@ public class Cruza implements Runnable {
             //quitar los numeros y volver a poner #
             hijo1 = ponerNumerales(hijo1);
             hijo2 = ponerNumerales(hijo2);
-            
-            System.out.println(sonIguales(hijo1,hijo2));
+
+            //-----------------------------------------------------------BORRAR---------------------------------------------------
+            padre=ponerNumerales(padre);
+            madre=ponerNumerales(madre);
+            if (sonIguales(hijo1, madre)) {
+                System.out.println("SON IGUALES HIJO1 y MADRE");
+            }
+            if (sonIguales(hijo1, padre)) {
+                System.out.println("SON IGUALES HIJO1 y PADRE");
+            }
+            if (sonIguales(hijo2, madre)) {
+                System.out.println("SON IGUALES HIJO2 y MADRE");
+            }
+            if (sonIguales(hijo2, padre)) {
+                System.out.println("SON IGUALES HIJO2 y PADRE");
+            }
+            //-----------------------------------------------------------------------------------------------------------------------
 
             //agregar de forma Sincronizada al nuevo individuo
             synchronized (individuos) {
@@ -155,7 +170,7 @@ public class Cruza implements Runnable {
         for (int i = 0; i < 10; i++) {
             if (unArreglo[i] != otroArreglo[i]) {
                 resultado = false;
-                i=10;
+                i = 10;
             }
         }
         return resultado;
