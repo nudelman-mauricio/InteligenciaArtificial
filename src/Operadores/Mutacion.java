@@ -1,5 +1,6 @@
 package Operadores;
 
+import Interfaz.Ventana;
 import LogicaNegocios.Individuo;
 import LogicaNegocios.Poblacion;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class Mutacion implements Runnable {
             synchronized (individuos) {
                 individuos.add(new Individuo(aux.mutacion(), this.operacion, this.restricciones));
                 individuos.notify();
+                Ventana.cargarBarra(individuos.size());
             }
         }
     }

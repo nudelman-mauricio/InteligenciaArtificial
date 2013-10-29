@@ -1,5 +1,6 @@
 package Operadores;
 
+import Interfaz.Ventana;
 import LogicaNegocios.Individuo;
 import LogicaNegocios.Poblacion;
 import java.util.Iterator;
@@ -111,6 +112,7 @@ public class Seleccion implements Runnable {
             synchronized (individuos) {
                 individuos.add(unIndividuo);
                 individuos.notify();
+                Ventana.cargarBarra(individuos.size());
             }
         }
     }

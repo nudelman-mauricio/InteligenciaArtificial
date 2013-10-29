@@ -1,5 +1,6 @@
 package Operadores;
 
+import Interfaz.Ventana;
 import LogicaNegocios.Individuo;
 import LogicaNegocios.Poblacion;
 import java.util.Random;
@@ -109,6 +110,7 @@ public class Cruza implements Runnable {
             synchronized (individuos) {
                 individuos.add(unHijo1);
                 individuos.notify();
+                Ventana.cargarBarra(individuos.size());
             }
 
             //agregar segundo hijo de forma sincronizada, pero solo si la cantidad de hijos solicitada es par,
@@ -118,6 +120,7 @@ public class Cruza implements Runnable {
                 synchronized (individuos) {
                     individuos.add(unHijo2);
                     individuos.notify();
+                    Ventana.cargarBarra(individuos.size());
                 }
             }
         }
