@@ -12,6 +12,7 @@ public class Individuo implements Comparable {
 
     private double aptitud;
     private String genes;
+    private boolean imposible;
 
     public Individuo(String palabra, String operacion, ArrayList<ArrayList<Integer>> restricciones) { //palabra = string de letras únicas correspondiente a la operacion
         this.genes = palabra;
@@ -31,36 +32,44 @@ public class Individuo implements Comparable {
 
     //Calcular la APTITUD del individuo respecto de la operacion guardada
     private void setAptitud(String operacion, ArrayList<ArrayList<Integer>> restricciones) {
-        int auxAptitud = 0;
-        boolean bandera = true;
+        if (!imposible) {
+            int auxAptitud = 0;
+            boolean bandera = true;
 
-        for (int i = 0; i < restricciones.size(); i++) {
-            int contador = 0;
-            auxAptitud += restricciones.get(i).size();
+            for (int i = 0; i < restricciones.size(); i++) {
+                int contador = 0;
+                auxAptitud += restricciones.get(i).size();
 
-            for (int j = 0; j < restricciones.get(i).size(); j++) {
-                for (int k = contador; k < operacion.length(); k++) {
-                    if (k == restricciones.get(i).get(j)) {
-                        if (operacion.charAt(k) != operacion.charAt(restricciones.get(i).get(0))) { //Si en la posicion de la restriccion tiene mismo valor.
-                            bandera = false;
-                        }
-                        k = operacion.length();
-
-                    } else {
-                        if (operacion.charAt(k) == operacion.charAt(restricciones.get(i).get(0))) {
-                            bandera = false;
+                for (int j = 0; j < restricciones.get(i).size(); j++) {
+                    for (int k = contador; k < operacion.length(); k++) {
+                        if (k == restricciones.get(i).get(j)) {
+                            if (operacion.charAt(k) != operacion.charAt(restricciones.get(i).get(0))) { //Si en la posicion de la restriccion tiene mismo valor.
+                                bandera = false;
+                            }
                             k = operacion.length();
+
+                        } else {
+                            if (operacion.charAt(k) == operacion.charAt(restricciones.get(i).get(0))) {
+                                bandera = false;
+                                k = operacion.length();
+                            }
                         }
+                        contador++;
                     }
-                    contador++;
                 }
+                if (bandera) {
+                    auxAptitud -= restricciones.get(i).size();
+                }
+                bandera = true;
             }
-            if (bandera) {
-                auxAptitud -= restricciones.get(i).size();
+            this.aptitud = auxAptitud;
+        } else {
+            int maximaAptitud = 0;
+            for (int i = 0; i < restricciones.size(); i++) {
+                maximaAptitud += restricciones.get(i).size();
             }
-            bandera = true;
+            this.aptitud = maximaAptitud;
         }
-        this.aptitud = auxAptitud;
     }
 
     //convierto la operacion de letras en numeros a partir de los genes del individuo
@@ -71,8 +80,7 @@ public class Individuo implements Comparable {
         for (int i = 0; i < operacion.length(); i++) {
             if (operacion.charAt(i) == '=') {
                 i = operacion.length();
-            }//Corta al encontrar un =
-            else {
+            } else {
                 if (operacion.charAt(i) == '+' || operacion.charAt(i) == '-' || operacion.charAt(i) == '/' || operacion.charAt(i) == '*' || operacion.charAt(i) == '(' || operacion.charAt(i) == ')') {
                     resultado += String.valueOf(operacion.charAt(i));
                 } else {
@@ -93,17 +101,19 @@ public class Individuo implements Comparable {
 
         //rellenar con ceros cuando se pierden por el calculo
         //luego concatenar lo traducido con el resultado calculado
-        int longResultado = operacion.length() - resultado.length() - 1; // resto uno por el simbolo =
-
-        if (longResultado == numResultado.length()) {
-            resultado += "=" + numResultado;
-        } else {
-            resultado += "=";
-            for (int i = 0; i < longResultado - numResultado.length(); i++) {
-                resultado += "0";
-            }
-            resultado += numResultado;
+        int longResultado = operacion.length() - resultado.length() - 1; // resto uno por el simbolo =        
+        while (longResultado > numResultado.length()) {
+            numResultado = "0" + numResultado;
         }
+        resultado += "=" + numResultado;
+
+        //preguntar si la longitud del resultado calculado con los ceros agregados
+        //difiere de la longitud del resultado de la operacion ingresada originalmente
+        //de ser asi, la operacion resulta imposible con la genetica del individuo y debe descartarse el mismo
+        if (longResultado != numResultado.length()) {
+            this.imposible = true;
+        }
+
         return (resultado);
     }
 
@@ -166,9 +176,9 @@ public class Individuo implements Comparable {
     public String getGenes() {
         return this.genes;
     }
-    
+
     public void mutarme() {
-        this.genes=mutacion();
+        this.genes = mutacion();
     }
 
     public String mutacion() {

@@ -67,7 +67,7 @@ public class Main {
     }
     
     //calcula la cantidad de restricciones que es igual a la peor aptitud del peor individuo
-    private static int obtenerMaximaAptitud(ArrayList<ArrayList<Integer>> restricciones) {
+    public static int obtenerMaximaAptitud(ArrayList<ArrayList<Integer>> restricciones) {
         int maximaAptitud = 0;
         for (int i = 0; i < restricciones.size(); i++) {
             maximaAptitud += restricciones.get(i).size();

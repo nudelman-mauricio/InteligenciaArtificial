@@ -46,7 +46,9 @@ public class AlgoritmoGenetico {
 
         //generar poblaciones nuevas a partir de una vieja mientras no se alcance un individuo resultado
         while (this.poblacionActual.esSolucion() == null && !parar) {
-
+            //cargar barra de progreso
+            Ventana.cargarBarra(this.poblacionNumero);
+            
             //mostrar datos en tabla
             Object datos[] = {this.poblacionNumero, poblacionActual.aptitudProm(), this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion};
             this.contenidoTabla.addRow(datos);
