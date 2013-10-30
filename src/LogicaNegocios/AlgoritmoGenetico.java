@@ -96,17 +96,28 @@ public class AlgoritmoGenetico {
         Ventana.graficar(this.listaAptitudesPromedio);
 
         //calculo de promedio de operadores
-        promedioCruza = promedioCruza / (poblacionNumero-1);
-        promedioMutacion = promedioMutacion / (poblacionNumero-1);
+        promedioCruza = redondear(promedioCruza / (poblacionNumero-1)* 100 /cantIndividuos,2);
+        promedioMutacion = redondear(promedioMutacion / (poblacionNumero-1)* 100 /cantIndividuos,2);
 
         //mostrar solucion en pestaña resultados
-        Ventana.mostrarResultados(poblacionActual.esSolucion(), poblacionNumero, this.operacion, Double.toString(Math.rint((stopTime - startTime) * 100) / 100), String.valueOf(this.porcentajeSeleccion), String.valueOf(promedioCruza), String.valueOf(promedioMutacion));
+        Ventana.mostrarResultados(poblacionActual.esSolucion(), 
+                poblacionNumero, 
+                this.operacion, 
+                Double.toString(redondear(Math.rint((stopTime - startTime) * 100) / 100,2)), 
+                String.valueOf(this.porcentajeSeleccion * 100 /cantIndividuos), 
+                String.valueOf(promedioCruza), 
+                String.valueOf(promedioMutacion));
 
         //habilitar campos para nueva
         Ventana.habilitarCampos(true);
 
     }
-
+    
+    private double redondear(double numero, int digitos) {
+        int cifras = (int) Math.pow(10, digitos);
+        return Math.rint(numero * cifras) / cifras;
+    }
+    
     public void pararAlgoritmo() {
         this.parar = true;
     }
