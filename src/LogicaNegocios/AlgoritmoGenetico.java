@@ -55,7 +55,7 @@ public class AlgoritmoGenetico {
             Ventana.cargarBarra(this.poblacionNumero);
 
             //mostrar datos en tabla
-            Object datos[] = {this.poblacionNumero, poblacionActual.aptitudProm(), this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion};
+            Object datos[] = {this.poblacionNumero, redondear(poblacionActual.aptitudProm(),2), this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion};
             this.contenidoTabla.addRow(datos);
             Ventana.crearTabla(this.contenidoTabla);
 
