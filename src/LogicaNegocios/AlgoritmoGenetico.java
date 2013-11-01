@@ -51,9 +51,7 @@ public class AlgoritmoGenetico {
 
         //generar poblaciones nuevas a partir de una vieja mientras no se alcance un individuo resultado
         while (this.poblacionActual.esSolucion() == null && !parar) {
-            //cargar barra de progreso
-            Ventana.cargarBarra(this.poblacionNumero);
-
+            
             //mostrar datos en tabla
             Object datos[] = {this.poblacionNumero, redondear(poblacionActual.aptitudProm(), 2), this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion};
             this.contenidoTabla.addRow(datos);
@@ -82,6 +80,7 @@ public class AlgoritmoGenetico {
             }
             promedioCruza += this.porcentajeCruza;
             promedioMutacion += this.porcentajeMutacion;
+            Ventana.cargarBarra(this.cantIndividuos);
         }
         //obtener tiempo en el que finalizó la ejecucion del algoritmo, por encontrar solucion o por parada forzosa
         double stopTime = System.currentTimeMillis() * 0.001;
