@@ -64,9 +64,6 @@ public class Individuo implements Comparable {
                 bandera = true;
             }
             this.aptitud = auxAptitud;
-            if (this.aptitud == 0) {
-                System.out.println(this.genes + " - " + operacion);
-            }
         } else {
             int maximaAptitud = 0;
             for (int i = 0; i < restricciones.size(); i++) {
