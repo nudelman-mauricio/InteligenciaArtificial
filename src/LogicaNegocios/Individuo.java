@@ -16,6 +16,7 @@ public class Individuo implements Comparable {
 
     public Individuo(String palabra, String operacion, ArrayList<ArrayList<Integer>> restricciones) { //palabra = string de letras únicas correspondiente a la operacion
         this.genes = palabra;
+        this.imposible = false;
 
         //Calculo de aptitud
         setAptitud(convOperacion(operacion), restricciones); //convOperacion es para pasar operacion a numeros        
