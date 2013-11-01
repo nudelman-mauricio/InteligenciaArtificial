@@ -18,7 +18,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import javax.swing.SwingWorker;
 import java.util.ArrayList;
-import Archivo.Archivo;
+//import Archivo.Archivo;
 import de.javasoft.plaf.synthetica.SyntheticaBlackStarLookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -27,7 +27,7 @@ public class Ventana extends javax.swing.JFrame {
 
     static String[] encabezado = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
     static DefaultTableModel contenidoTabla = new DefaultTableModel(encabezado, 0);
-    static Archivo unArchivo;
+//    static Archivo unArchivo;
     static String nuevalinea = System.getProperty("line.separator");
     
     public Ventana() {
@@ -551,13 +551,13 @@ public class Ventana extends javax.swing.JFrame {
             jProgressBar1.setMaximum(Integer.parseInt(jComboBoxCantidadIndividuos.getSelectedItem().toString()));
             jProgressBar1.setMinimum(0);
 
-            //grabar en archivo
-            unArchivo = new Archivo();
-            unArchivo.escribirEnArchivo(nuevalinea + "Operacion: " + jTextOperacion.getText());
-            unArchivo.escribirEnArchivo(nuevalinea + "TamañoPoblacion: " + jComboBoxCantidadIndividuos.getSelectedItem().toString());
-            unArchivo.escribirEnArchivo(nuevalinea + "%Seleccion: " + jTextFieldSeleccion.getText());
-            unArchivo.escribirEnArchivo(nuevalinea + "%Cruza: " + jTextFieldCruza.getText());
-            unArchivo.escribirEnArchivo(nuevalinea + "%Mutacion: " + jTextFieldMutacion.getText());
+//            //grabar en archivo
+//            unArchivo = new Archivo();
+//            unArchivo.escribirEnArchivo(nuevalinea + "Operacion: " + jTextOperacion.getText());
+//            unArchivo.escribirEnArchivo(nuevalinea + "TamañoPoblacion: " + jComboBoxCantidadIndividuos.getSelectedItem().toString());
+//            unArchivo.escribirEnArchivo(nuevalinea + "%Seleccion: " + jTextFieldSeleccion.getText());
+//            unArchivo.escribirEnArchivo(nuevalinea + "%Cruza: " + jTextFieldCruza.getText());
+//            unArchivo.escribirEnArchivo(nuevalinea + "%Mutacion: " + jTextFieldMutacion.getText());
 
             //limpieza de campos en pestaña resultados
             limpiarTabla(jTableIteraciones);
@@ -722,12 +722,12 @@ public class Ventana extends javax.swing.JFrame {
         contenidoTabla.addRow(datos);
         jTableGenes.setModel(contenidoTabla);
         
-        //escribir en archivo los resultados
-        unArchivo.escribirEnArchivo(nuevalinea + "CantIteraciones: " + jLabelCantIteraciones.getText());
-        unArchivo.escribirEnArchivo(nuevalinea + "Tiempo: " + tiempo + " seg");
-        unArchivo.escribirEnArchivo(nuevalinea + "OperacionCodificada: " + jLabelOpeResultado.getText());
-        unArchivo.escribirEnArchivo(nuevalinea + "Genes: " + String.copyValueOf(genes) + nuevalinea + nuevalinea);
-        unArchivo.cerrarFW();
+//        //escribir en archivo los resultados
+//        unArchivo.escribirEnArchivo(nuevalinea + "CantIteraciones: " + jLabelCantIteraciones.getText());
+//        unArchivo.escribirEnArchivo(nuevalinea + "Tiempo: " + tiempo + " seg");
+//        unArchivo.escribirEnArchivo(nuevalinea + "OperacionCodificada: " + jLabelOpeResultado.getText());
+//        unArchivo.escribirEnArchivo(nuevalinea + "Genes: " + String.copyValueOf(genes) + nuevalinea + nuevalinea);
+//        unArchivo.cerrarFW();
     }
 
     public static void habilitarCampos(boolean estado) {
