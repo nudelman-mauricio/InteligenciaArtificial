@@ -102,8 +102,8 @@ public class Cruza implements Runnable {
 
             //en el caso de que los individuos nuevos sean iguales a sus padres se los muta
             if (sonIguales(hijo1, padre)) {
-                unHijo1.mutarme();
-                unHijo2.mutarme();
+                unHijo1.mutarme(operacion, restricciones);
+                unHijo2.mutarme(operacion, restricciones);
             }
 
             //agregar de forma Sincronizada al nuevo individuo hijo1

@@ -64,6 +64,9 @@ public class Individuo implements Comparable {
                 bandera = true;
             }
             this.aptitud = auxAptitud;
+            if (this.aptitud == 0) {
+                System.out.println(this.genes + " - " + operacion);
+            }
         } else {
             int maximaAptitud = 0;
             for (int i = 0; i < restricciones.size(); i++) {
@@ -178,8 +181,10 @@ public class Individuo implements Comparable {
         return this.genes;
     }
 
-    public void mutarme() {
+    public void mutarme(String operacion, ArrayList<ArrayList<Integer>> restricciones) {
         this.genes = mutacion();
+        //Calculo de aptitud
+        setAptitud(convOperacion(operacion), restricciones); //convOperacion es para pasar operacion a numeros
     }
 
     public String mutacion() {
