@@ -85,7 +85,8 @@ public class AlgoritmoGenetico {
         }
         //obtener tiempo en el que finalizó la ejecucion del algoritmo, por encontrar solucion o por parada forzosa
         double stopTime = System.currentTimeMillis() * 0.001;
-
+        
+        System.out.println(poblacionActual.esSolucion().toString());
         //mostrar tabla
         Object datos[] = {poblacionNumero, poblacionActual.aptitudProm(), this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion};
         this.contenidoTabla.addRow(datos);
@@ -107,7 +108,7 @@ public class AlgoritmoGenetico {
                 String.valueOf(this.porcentajeSeleccion * 100 /cantIndividuos), 
                 String.valueOf(promedioCruza), 
                 String.valueOf(promedioMutacion));
-
+        
         //habilitar campos para nueva
         Ventana.habilitarCampos(true);
 
