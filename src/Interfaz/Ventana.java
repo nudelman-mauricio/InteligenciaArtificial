@@ -89,7 +89,7 @@ public class Ventana extends javax.swing.JFrame {
         jLabelOpeOriginal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Inteligencia Artificial II - Alumnos: Dei Castelli, Nudelman y Wiztke - Año: 2013");
+        setTitle("Inteligencia Artificial II - Alumnos: Dei Castelli, Nudelman y Witzke - Año: 2013");
         setBounds(new java.awt.Rectangle(200, 50, 0, 0));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
