@@ -70,7 +70,7 @@ public class Main {
     public static int obtenerMaximaAptitud(ArrayList<ArrayList<Integer>> restricciones) {
         int maximaAptitud = 0;
         for (int i = 0; i < restricciones.size(); i++) {
-            maximaAptitud += restricciones.get(i).size()+i*2;
+            maximaAptitud += (i+1)*2;
         }
         return maximaAptitud;
     }
