@@ -39,7 +39,7 @@ public class Individuo implements Comparable {
 
             for (int i = 0; i < restricciones.size(); i++) {
                 int contador = 0;
-                auxAptitud += restricciones.get(i).size();
+                auxAptitud += restricciones.get(i).size()+i*2;
 
                 for (int j = 0; j < restricciones.get(i).size(); j++) {
                     for (int k = contador; k < operacion.length(); k++) {
@@ -59,7 +59,7 @@ public class Individuo implements Comparable {
                     }
                 }
                 if (bandera) {
-                    auxAptitud -= restricciones.get(i).size();
+                    auxAptitud -= restricciones.get(i).size()+i*2;
                 }
                 bandera = true;
             }
@@ -67,7 +67,7 @@ public class Individuo implements Comparable {
         } else {
             int maximaAptitud = 0;
             for (int i = 0; i < restricciones.size(); i++) {
-                maximaAptitud += restricciones.get(i).size();
+                maximaAptitud += restricciones.get(i).size()+i*2;
             }
             this.aptitud = maximaAptitud;
         }
