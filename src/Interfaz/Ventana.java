@@ -252,7 +252,7 @@ public class Ventana extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Nro Poblacion", "Aptiptud Promedio", "Cantidad Selección", "Cantidad Cruza", "Cantidad Mutacion"
+                "Nro Poblacion", "Aptiptud Promedio", "Mejor Individuo", "Cantidad Cruza", "Cantidad Mutacion"
             }
         ) {
             boolean[] canEdit = new boolean [] {

@@ -2,6 +2,7 @@ package LogicaNegocios;
 
 import java.util.ArrayList;
 import Interfaz.Ventana;
+import java.util.Iterator;
 import javax.swing.table.DefaultTableModel;
 
 public class AlgoritmoGenetico {
@@ -16,10 +17,11 @@ public class AlgoritmoGenetico {
     private double lambda;
     private int mutacionMax, mutacionMin;
     private double mutacionAcumulador;
-    private static String[] encabezado = {"Nro Poblacion", "Aptiptud Promedio", "Cantidad Selección", "Cantidad Cruza", "Cantidad Mutación"};
+    private static String[] encabezado = {"Nro Poblacion", "Aptiptud Promedio", "Mejor Individuo", "Cantidad Cruza", "Cantidad Mutación"};
     private static DefaultTableModel contenidoTabla = new DefaultTableModel(encabezado, 0);
     private ArrayList<Double> listaAptitudesPromedio;
     private boolean parar = false;
+    private String mejorIndividuo;
 
     public AlgoritmoGenetico(int maximaAptitud, String operacion, int cantIndividuos, int porcentajeSeleccion, int porcentajeCruza, int porcentajeMutacion, double lambda, ArrayList<ArrayList<Integer>> restricciones) {
         this.maximaAptitud = maximaAptitud;
@@ -35,6 +37,7 @@ public class AlgoritmoGenetico {
         this.mutacionAcumulador = 0;
         this.poblacionNumero = 1;
         this.listaAptitudesPromedio = new ArrayList<Double>();
+
     }
 
     public void comenzarAlgoritmo() {
@@ -51,9 +54,15 @@ public class AlgoritmoGenetico {
 
         //generar poblaciones nuevas a partir de una vieja mientras no se alcance un individuo resultado
         while (this.poblacionActual.esSolucion() == null && !parar) {
-            
-            //mostrar datos en tabla
-            Object datos[] = {this.poblacionNumero, redondear(poblacionActual.aptitudProm(), 2), this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion};
+
+            //obtiene mejor individuo, ver como mejorar el break
+            for (Individuo aux : poblacionActual.getIndividuos()) {
+                mejorIndividuo = aux.getGenes();
+                break;
+            }
+
+            //mostrar datos en tabla            
+            Object datos[] = {this.poblacionNumero, redondear(poblacionActual.aptitudProm(), 2), this.mejorIndividuo, this.porcentajeCruza, this.porcentajeMutacion};
             this.contenidoTabla.addRow(datos);
             Ventana.crearTabla(this.contenidoTabla);
 
@@ -84,15 +93,18 @@ public class AlgoritmoGenetico {
         }
         //obtener tiempo en el que finalizó la ejecucion del algoritmo, por encontrar solucion o por parada forzosa
         double stopTime = System.currentTimeMillis() * 0.001;
-       
         //mostrar tabla
-        Object datos[] = {poblacionNumero, redondear(poblacionActual.aptitudProm(),2), this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion};
+        Object datos[] = {poblacionNumero, redondear(poblacionActual.aptitudProm(), 2), mejorIndividuo, this.porcentajeCruza, this.porcentajeMutacion};
+
         this.contenidoTabla.addRow(datos);
-        Ventana.crearTabla(this.contenidoTabla);
+
+        Ventana.crearTabla(
+                this.contenidoTabla);
 
         //mostrar gráfico
         this.listaAptitudesPromedio.add(poblacionActual.aptitudProm());
-        Ventana.graficar(this.listaAptitudesPromedio);
+        Ventana.graficar(
+                this.listaAptitudesPromedio);
 
         //calculo de promedio de operadores
         promedioCruza = redondear(promedioCruza / (poblacionNumero - 1) * 100 / cantIndividuos, 2);
@@ -108,7 +120,8 @@ public class AlgoritmoGenetico {
                 String.valueOf(promedioMutacion));
 
         //habilitar campos para nueva
-        Ventana.habilitarCampos(true);
+        Ventana.habilitarCampos(
+                true);
 
     }
 
