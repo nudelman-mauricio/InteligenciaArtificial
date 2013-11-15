@@ -824,18 +824,20 @@ public class Ventana extends javax.swing.JFrame {
         jButtonParar.setEnabled(!estado);
     }
 
-    public static void graficar(ArrayList<Double> listaAptitudesPromedio) {
+    public static void graficar(ArrayList<Double> listaAptitudesPromedio, ArrayList<Double> listaMejorIndividuo) {
         //crear serie de pares X,Y para graficar
-        XYSeries unaSerie = new XYSeries("XYGraph");
+        XYSeries serieAptPromedio = new XYSeries("Grafico Aptiptud Promedio");
+        XYSeries serieMejorIndividuo = new XYSeries("Grafico Mejor Individuo");
         for (int i = 0; (i < listaAptitudesPromedio.size()); i++) {
-            unaSerie.add(i, listaAptitudesPromedio.get(i));
-
+            serieAptPromedio.add(i, listaAptitudesPromedio.get(i));
+            serieMejorIndividuo.add(i,listaMejorIndividuo.get(i));
         }
 
         // agregar la serie a la coleccion de series a graficar
         XYSeriesCollection unaColeccionSeries = new XYSeriesCollection();
-        unaColeccionSeries.addSeries(unaSerie);
-
+        unaColeccionSeries.addSeries(serieAptPromedio);
+        unaColeccionSeries.addSeries(serieMejorIndividuo);
+        
         // crear un contenedor de graficos
         JFreeChart chart = ChartFactory.createXYLineChart(
                 "", // titulo del grafico anulado para ganar espacio
@@ -857,26 +859,29 @@ public class Ventana extends javax.swing.JFrame {
         // graficar el grafico
         XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
         renderer.setSeriesPaint(0, Color.RED);
+        renderer.setSeriesPaint(1, Color.BLUE);
 
         //comenzar con un trazo de linea ancho para desestimar pequeñas variaciones de aptitud
         //ir aumentando a medida que las iteraciones crecen para ganar presicion
         renderer.setSeriesStroke(0, new BasicStroke(7.0f));
-        if (unaSerie.getItemCount() > 100) {
+        renderer.setSeriesStroke(1, new BasicStroke(7.0f));
+        
+        if (serieAptPromedio.getItemCount() > 100) {
             renderer.setSeriesStroke(0, new BasicStroke(6.0f));
         }
-        if (unaSerie.getItemCount() > 200) {
+        if (serieAptPromedio.getItemCount() > 200) {
             renderer.setSeriesStroke(0, new BasicStroke(5.0f));
         }
-        if (unaSerie.getItemCount() > 300) {
+        if (serieAptPromedio.getItemCount() > 300) {
             renderer.setSeriesStroke(0, new BasicStroke(4.0f));
         }
-        if (unaSerie.getItemCount() > 400) {
+        if (serieAptPromedio.getItemCount() > 400) {
             renderer.setSeriesStroke(0, new BasicStroke(3.0f));
         }
-        if (unaSerie.getItemCount() > 500) {
+        if (serieAptPromedio.getItemCount() > 500) {
             renderer.setSeriesStroke(0, new BasicStroke(2.0f));
         }
-        if (unaSerie.getItemCount() > 600) {
+        if (serieAptPromedio.getItemCount() > 600) {
             renderer.setSeriesStroke(0, new BasicStroke(1.0f));
         }
 

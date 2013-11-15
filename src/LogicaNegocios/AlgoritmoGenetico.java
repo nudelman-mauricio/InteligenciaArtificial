@@ -20,6 +20,7 @@ public class AlgoritmoGenetico {
     private static String[] encabezado = {"Nro Poblacion", "Aptiptud Promedio", "Mejor Individuo", "Cantidad Cruza", "Cantidad Mutación"};
     private static DefaultTableModel contenidoTabla = new DefaultTableModel(encabezado, 0);
     private ArrayList<Double> listaAptitudesPromedio;
+    private ArrayList<Double> listaMejorIndividuo;
     private boolean parar = false;
     private String mejorIndividuo;
 
@@ -37,7 +38,7 @@ public class AlgoritmoGenetico {
         this.mutacionAcumulador = 0;
         this.poblacionNumero = 1;
         this.listaAptitudesPromedio = new ArrayList<Double>();
-
+        this.listaMejorIndividuo = new ArrayList<Double>();
     }
 
     public void comenzarAlgoritmo() {
@@ -55,9 +56,10 @@ public class AlgoritmoGenetico {
         //generar poblaciones nuevas a partir de una vieja mientras no se alcance un individuo resultado
         while (this.poblacionActual.esSolucion() == null && !parar) {
 
-            //obtiene mejor individuo, ver como mejorar el break
+            //obtiene mejor individuo y agrega la mejor aptitud como dato, ver como mejorar el break
             for (Individuo aux : poblacionActual.getIndividuos()) {
                 mejorIndividuo = aux.getGenes();
+                listaMejorIndividuo.add(aux.getAptitud());
                 break;
             }
 
@@ -68,7 +70,7 @@ public class AlgoritmoGenetico {
 
             //mostrar datos en grafico
             this.listaAptitudesPromedio.add(poblacionActual.aptitudProm());
-            Ventana.graficar(this.listaAptitudesPromedio);
+            Ventana.graficar(this.listaAptitudesPromedio,listaMejorIndividuo);
 
             //crar nueva poblacion con los operadores
             this.poblacionNueva = new Poblacion(this.operacion, this.cantIndividuos, this.poblacionActual, this.restricciones, this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion, this.maximaAptitud);
@@ -93,18 +95,26 @@ public class AlgoritmoGenetico {
         }
         //obtener tiempo en el que finalizó la ejecucion del algoritmo, por encontrar solucion o por parada forzosa
         double stopTime = System.currentTimeMillis() * 0.001;
+        
+        //obtiene mejor individuo y agrega la mejor aptitud como dato, ver como mejorar el break
+            for (Individuo aux : poblacionActual.getIndividuos()) {
+                mejorIndividuo = aux.getGenes();
+                listaMejorIndividuo.add(aux.getAptitud());
+                break;
+            }
+            
         //mostrar tabla
         Object datos[] = {poblacionNumero, redondear(poblacionActual.aptitudProm(), 2), mejorIndividuo, this.porcentajeCruza, this.porcentajeMutacion};
 
         this.contenidoTabla.addRow(datos);
 
         Ventana.crearTabla(
-                this.contenidoTabla);
-
+                this.contenidoTabla);        
+        
         //mostrar gráfico
         this.listaAptitudesPromedio.add(poblacionActual.aptitudProm());
         Ventana.graficar(
-                this.listaAptitudesPromedio);
+                this.listaAptitudesPromedio, listaMejorIndividuo);
 
         //calculo de promedio de operadores
         promedioCruza = redondear(promedioCruza / (poblacionNumero - 1) * 100 / cantIndividuos, 2);
