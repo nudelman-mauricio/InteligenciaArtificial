@@ -39,8 +39,9 @@ public class Mutacion implements Runnable {
                         individuos.notify();
                         Ventana.cargarBarra(individuos.size());
                     }
-                }
+                }                
             }
+            contador=0;
         }
     }
 }

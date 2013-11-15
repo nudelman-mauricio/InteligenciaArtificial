@@ -868,21 +868,27 @@ public class Ventana extends javax.swing.JFrame {
         
         if (serieAptPromedio.getItemCount() > 100) {
             renderer.setSeriesStroke(0, new BasicStroke(6.0f));
+            renderer.setSeriesStroke(1, new BasicStroke(6.0f));
         }
         if (serieAptPromedio.getItemCount() > 200) {
             renderer.setSeriesStroke(0, new BasicStroke(5.0f));
+            renderer.setSeriesStroke(1, new BasicStroke(5.0f));
         }
         if (serieAptPromedio.getItemCount() > 300) {
             renderer.setSeriesStroke(0, new BasicStroke(4.0f));
+            renderer.setSeriesStroke(1, new BasicStroke(4.0f));
         }
         if (serieAptPromedio.getItemCount() > 400) {
             renderer.setSeriesStroke(0, new BasicStroke(3.0f));
+            renderer.setSeriesStroke(1, new BasicStroke(3.0f));
         }
         if (serieAptPromedio.getItemCount() > 500) {
             renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+            renderer.setSeriesStroke(1, new BasicStroke(2.0f));
         }
         if (serieAptPromedio.getItemCount() > 600) {
             renderer.setSeriesStroke(0, new BasicStroke(1.0f));
+            renderer.setSeriesStroke(1, new BasicStroke(1.0f));
         }
 
         // crear imagen del grafico
