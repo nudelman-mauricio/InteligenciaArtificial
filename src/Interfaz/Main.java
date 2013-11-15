@@ -15,7 +15,7 @@ public class Main {
     }
     
     public static void comenzarAlgoritmo(String operacion, int cantIndividuos, int porcentajeSeleccion, int porcentajeCruza, int porcentajeMutacion, double lambda) {
-
+               
         //Calcular porcentajes de Seleccion/Cruza/Mutacion
         porcentajeSeleccion = (porcentajeSeleccion * cantIndividuos) / 100;
         porcentajeCruza = (porcentajeCruza * cantIndividuos) / 100;
