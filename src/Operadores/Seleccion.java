@@ -97,6 +97,7 @@ public class Seleccion implements Runnable {
                     synchronized (individuos) {
                         individuos.add(new Individuo(aux));
                         individuos.notify();
+                        Ventana.cargarBarra(individuos.size());
                     }
                 }
                 num++;

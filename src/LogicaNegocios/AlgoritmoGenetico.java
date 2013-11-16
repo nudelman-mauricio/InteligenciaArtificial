@@ -91,7 +91,7 @@ public class AlgoritmoGenetico {
             }
             promedioCruza += this.porcentajeCruza;
             promedioMutacion += this.porcentajeMutacion;
-            Ventana.cargarBarra(this.cantIndividuos);
+            //Ventana.cargarBarra(this.cantIndividuos);
         }
         //obtener tiempo en el que finalizó la ejecucion del algoritmo, por encontrar solucion o por parada forzosa
         double stopTime = System.currentTimeMillis() * 0.001;
