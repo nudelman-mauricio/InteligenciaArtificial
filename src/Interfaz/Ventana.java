@@ -277,8 +277,6 @@ public class Ventana extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLabelMutacion.getAccessibleContext().setAccessibleName("10");
-
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Grafico", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Calibri", 1, 14))); // NOI18N
         jPanel1.setPreferredSize(new java.awt.Dimension(619, 275));
         jPanel1.setRequestFocusEnabled(false);
@@ -670,14 +668,20 @@ public class Ventana extends javax.swing.JFrame {
 
     private void jSliderMutacionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderMutacionStateChanged
         jLabelMutacion.setText(String.valueOf(jSliderMutacion.getValue()));
+        jSliderSeleccion.setValue(100-jSliderCruza.getValue()-jSliderMutacion.getValue());
+        jSliderCruza.setValue(100-jSliderSeleccion.getValue()-jSliderMutacion.getValue());
     }//GEN-LAST:event_jSliderMutacionStateChanged
 
     private void jSliderCruzaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderCruzaStateChanged
         jLabelCruza.setText(String.valueOf(jSliderCruza.getValue()));
+        jSliderMutacion.setValue(100-jSliderSeleccion.getValue()-jSliderCruza.getValue());
+        jSliderSeleccion.setValue(100-jSliderCruza.getValue()-jSliderMutacion.getValue());
     }//GEN-LAST:event_jSliderCruzaStateChanged
 
     private void jSliderSeleccionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderSeleccionStateChanged
         jLabelSeleccion.setText(String.valueOf(jSliderSeleccion.getValue()));
+        jSliderMutacion.setValue(100-jSliderSeleccion.getValue()-jSliderCruza.getValue());
+        jSliderCruza.setValue(100-jSliderSeleccion.getValue()-jSliderMutacion.getValue());
     }//GEN-LAST:event_jSliderSeleccionStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
