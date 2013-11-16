@@ -1,6 +1,5 @@
 package LogicaNegocios;
 
-import static Interfaz.Main.verificarCantLetras;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -35,12 +34,12 @@ public class Individuo implements Comparable {
     //Calcular la APTITUD del individuo respecto de la operacion guardada
     private void setAptitud(String operacion, ArrayList<ArrayList<Integer>> restricciones) {
         if (!imposible) {
-            int auxAptitud = restricciones.size() * 15;
+            int auxAptitud = 0;
             boolean bandera = true;
 
             for (int i = 0; i < restricciones.size(); i++) {
                 int contador = 0;
-                auxAptitud += (i + 1) * (i + 1) + (restricciones.size() * 2);
+                auxAptitud += (i+1)*(i+1);
 
                 for (int j = 0; j < restricciones.get(i).size(); j++) {
                     for (int k = contador; k < operacion.length(); k++) {
@@ -60,32 +59,15 @@ public class Individuo implements Comparable {
                     }
                 }
                 if (bandera) {
-                    auxAptitud -= (i + 1) * (i + 1) + (restricciones.size() * 2);
-                    if (i == 0) {
-                        if (verificarCantLetras(operacion) < cantLetrasResultados(operacion)) {
-                            for (int j = 0; j < operacion.length(); j++) {
-                                if (operacion.charAt(j) == '=') {
-                                    if (operacion.charAt(j + 1) == '0' || operacion.charAt(j + 1) == '1') {
-                                        auxAptitud -= 15 * restricciones.size();
-                                    }
-                                }
-                            }
-                        } else {
-                            auxAptitud -= 15 * restricciones.size();
-                        }
-                    }
+                    auxAptitud -= (i+1)*(i+1);
                 }
                 bandera = true;
             }
-
             this.aptitud = auxAptitud;
         } else {
             int maximaAptitud = 0;
             for (int i = 0; i < restricciones.size(); i++) {
-                maximaAptitud += (i + 1) * (i + 1) + (restricciones.size() * 2);
-            }
-            if (verificarCantLetras(operacion) < cantLetrasResultados(operacion)) {
-                maximaAptitud += 15 * restricciones.size();
+                maximaAptitud += (i+1)*(i+1);
             }
             this.aptitud = maximaAptitud;
         }
@@ -212,40 +194,7 @@ public class Individuo implements Comparable {
         }
         mutado = this.genes.toCharArray();
         mutado[nrand1] = this.genes.charAt(nrand2);
-        mutado[nrand2] = this.genes.charAt(nrand1);        
+        mutado[nrand2] = this.genes.charAt(nrand1);
         return String.copyValueOf(mutado);
-    }
-
-    public static int verificarCantLetras(String operacion) {
-        int contador = 0, mayor = 0;
-        for (int i = 0; i < operacion.length(); i++) {
-
-            if (operacion.charAt(i) == '+' || operacion.charAt(i) == '=') {
-                if (contador > mayor) {
-                    mayor = contador;
-                };
-                contador = 0;
-                if (operacion.charAt(i) == '=') {
-                    i = operacion.length();
-                }
-            } else {
-                contador++;
-            }
-        }
-        return mayor;
-    }
-
-    public static int cantLetrasResultados(String operacion) {
-        int contador = 0;
-        boolean bandera = false;
-        for (int i = 0; i < operacion.length(); i++) {
-            if (bandera) {
-                contador++;
-            }
-            if (operacion.charAt(i) == '=') {
-                bandera = true;
-            }
-        }
-        return contador;
     }
 }
