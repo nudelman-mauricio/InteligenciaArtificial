@@ -212,16 +212,7 @@ public class Individuo implements Comparable {
         }
         mutado = this.genes.toCharArray();
         mutado[nrand1] = this.genes.charAt(nrand2);
-        mutado[nrand2] = this.genes.charAt(nrand1);
-        
-        nrand1 = 0; nrand2 = 0;
-        while (nrand1 == nrand2) {
-            nrand1 = r.nextInt(10);
-            nrand2 = r.nextInt(10);
-        }
-        mutado = this.genes.toCharArray();
-        mutado[nrand1] = this.genes.charAt(nrand2);
-        mutado[nrand2] = this.genes.charAt(nrand1);     
+        mutado[nrand2] = this.genes.charAt(nrand1);        
         return String.copyValueOf(mutado);
     }
 
