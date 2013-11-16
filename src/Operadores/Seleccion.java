@@ -64,19 +64,19 @@ public class Seleccion implements Runnable {
         double sumatoria = 0;
         int cont = 0;
         for (Individuo aux : poblacionVieja.getIndividuos()) {
-            auxCalculo[cont] = redondear(((maximaAptitud - (aux.getAptitud() + 1)) / sum) * 1000, 0); //cantidad de espacios en la ruleta por individuo
+            auxCalculo[cont] = redondear(((maximaAptitud - (aux.getAptitud() + 1)) / sum) * 100000, 0); //cantidad de espacios en la ruleta por individuo
             sumatoria += auxCalculo[cont];
             auxCalculoAcum[cont] = sumatoria - 1;
             cont++;
         }
-        auxCalculo[poblacionVieja.getIndividuos().size() - 1] += (1000 - sumatoria); //Corrige problema redondeo para el rango
+        auxCalculo[poblacionVieja.getIndividuos().size() - 1] += (100000 - sumatoria); //Corrige problema redondeo para el rango
 
         //Hasta acá es el calculo de los rangos.
 
         //Seleccion
         int pos, num;
         for (int i = 0; i < cantidad; i++) {
-            aleatorio = generadorAleatorio.nextInt(1000);
+            aleatorio = generadorAleatorio.nextInt(100000);
             pos = 0;
             for (int j = 0; j < poblacionVieja.getIndividuos().size(); j++) {
                 if (j == 0) {
