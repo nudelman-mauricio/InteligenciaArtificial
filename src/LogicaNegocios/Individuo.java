@@ -1,5 +1,7 @@
 package LogicaNegocios;
 
+import static Interfaz.Main.cantLetrasResultado;
+import static Interfaz.Main.mayorOperando;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -36,10 +38,13 @@ public class Individuo implements Comparable {
         if (!imposible) {
             int auxAptitud = 0;
             boolean bandera = true;
-
+            if (cantLetrasResultado(operacion) > mayorOperando(operacion)) {
+                auxAptitud = +3;
+            }            
             for (int i = 0; i < restricciones.size(); i++) {
                 int contador = 0;
-                auxAptitud += (i+1)*(i+1);
+                
+                auxAptitud += (i + 1) * (i + 1);
 
                 for (int j = 0; j < restricciones.get(i).size(); j++) {
                     for (int k = contador; k < operacion.length(); k++) {
@@ -59,7 +64,19 @@ public class Individuo implements Comparable {
                     }
                 }
                 if (bandera) {
-                    auxAptitud -= (i+1)*(i+1);
+                    auxAptitud -= (i + 1) * (i + 1);
+                    if (i == 0) {
+                        
+                        if (cantLetrasResultado(operacion) > mayorOperando(operacion)) {
+                            for (int l = 0; l < operacion.length(); l++) {
+                                if (operacion.charAt(l) == '=') {
+                                    if (operacion.charAt(l + 1) == '1' || operacion.charAt(l + 1) == '0') {
+                                        auxAptitud -= 3;                                        
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 bandera = true;
             }
@@ -67,7 +84,10 @@ public class Individuo implements Comparable {
         } else {
             int maximaAptitud = 0;
             for (int i = 0; i < restricciones.size(); i++) {
-                maximaAptitud += (i+1)*(i+1);
+                maximaAptitud += (i + 1) * (i + 1);
+            }
+            if (cantLetrasResultado(operacion) > mayorOperando(operacion)) {
+                maximaAptitud =+3;
             }
             this.aptitud = maximaAptitud;
         }
@@ -196,5 +216,32 @@ public class Individuo implements Comparable {
         mutado[nrand1] = this.genes.charAt(nrand2);
         mutado[nrand2] = this.genes.charAt(nrand1);
         return String.copyValueOf(mutado);
+    }
+
+    private int mayorOperando(String operacion) {
+        int mayor = 0, contador = 0;
+        for (int i = 0; i < operacion.length(); i++) {
+            if (operacion.charAt(i) == '+' || operacion.charAt(i) == '=') {
+                if (mayor < contador) {
+                    mayor = contador;
+                    contador = 0;
+                }
+                if (operacion.charAt(i) == '=') {
+                    i = operacion.length();
+                }
+            }
+            contador++;
+        }
+        return mayor;
+    }
+
+    private int cantLetrasResultado(String operacion) {
+        int contador = 0;
+        for (int i = 0; i < operacion.length(); i++) {
+            if (operacion.charAt(i) == '=') {
+                contador = operacion.length() - i;
+            }
+        }
+        return contador;
     }
 }

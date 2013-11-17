@@ -29,7 +29,7 @@ public class Seleccion implements Runnable {
         
         //determinar cantidades, si es par, hace 50/50
         //si son impares se hace un mas por Ruleta
-        /*int cantidadRuleta, cantidadElitista;
+        int cantidadRuleta, cantidadElitista;
         if (this.porcentajeSeleccion % 2 != 0) {
             cantidadRuleta=((int)(porcentajeSeleccion/2))+1;
             cantidadElitista=cantidadRuleta-1;            
@@ -37,13 +37,13 @@ public class Seleccion implements Runnable {
         else{
             cantidadRuleta=porcentajeSeleccion/2;
             cantidadElitista=cantidadRuleta;
-        }*/
-        
+        }
+      
         //selecccion por Ruleta
-        seleccionRuleta(porcentajeSeleccion);
+        seleccionRuleta(cantidadRuleta);
 
         //seleccion Elitista
-        //seleccionElitista(cantidadElitista);
+        seleccionElitista(cantidadElitista);
     }
 
     private double redondear(double numero, int digitos) {
