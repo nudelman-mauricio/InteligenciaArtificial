@@ -77,6 +77,8 @@ public class AlgoritmoGenetico {
             this.poblacionActual = this.poblacionNueva;
             this.poblacionNumero++;
 
+           
+            
             //calculo de mutacion adaptativa por temperatura ascendente
             this.mutacionAcumulador += this.lambda * this.cantIndividuos;
             if (this.mutacionAcumulador >= 1) {
