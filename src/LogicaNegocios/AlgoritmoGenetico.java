@@ -61,7 +61,7 @@ public class AlgoritmoGenetico {
                 mejorIndividuo = aux.getGenes();
                 listaMejorIndividuo.add(aux.getAptitud());
                 break;
-            }
+            }   
 
             //mostrar datos en tabla            
             Object datos[] = {this.poblacionNumero, redondear(poblacionActual.aptitudProm(), 2), this.mejorIndividuo, this.porcentajeCruza, this.porcentajeMutacion};
@@ -70,15 +70,15 @@ public class AlgoritmoGenetico {
 
             //mostrar datos en grafico
             this.listaAptitudesPromedio.add(poblacionActual.aptitudProm());
-            Ventana.graficar(this.listaAptitudesPromedio,listaMejorIndividuo);
+            Ventana.graficar(this.listaAptitudesPromedio, listaMejorIndividuo);
 
             //crar nueva poblacion con los operadores
             this.poblacionNueva = new Poblacion(this.operacion, this.cantIndividuos, this.poblacionActual, this.restricciones, this.porcentajeSeleccion, this.porcentajeCruza, this.porcentajeMutacion, this.maximaAptitud);
             this.poblacionActual = this.poblacionNueva;
             this.poblacionNumero++;
 
-           
-            
+
+
             //calculo de mutacion adaptativa por temperatura ascendente
             this.mutacionAcumulador += this.lambda * this.cantIndividuos;
             if (this.mutacionAcumulador >= 1) {
@@ -97,22 +97,22 @@ public class AlgoritmoGenetico {
         }
         //obtener tiempo en el que finalizó la ejecucion del algoritmo, por encontrar solucion o por parada forzosa
         double stopTime = System.currentTimeMillis() * 0.001;
-        
+
         //obtiene mejor individuo y agrega la mejor aptitud como dato, ver como mejorar el break
-            for (Individuo aux : poblacionActual.getIndividuos()) {
-                mejorIndividuo = aux.getGenes();
-                listaMejorIndividuo.add(aux.getAptitud());
-                break;
-            }
-            
+        for (Individuo aux : poblacionActual.getIndividuos()) {
+            mejorIndividuo = aux.getGenes();
+            listaMejorIndividuo.add(aux.getAptitud());
+            break;
+        }
+
         //mostrar tabla
         Object datos[] = {poblacionNumero, redondear(poblacionActual.aptitudProm(), 2), mejorIndividuo, this.porcentajeCruza, this.porcentajeMutacion};
 
         this.contenidoTabla.addRow(datos);
 
         Ventana.crearTabla(
-                this.contenidoTabla);        
-        
+                this.contenidoTabla);
+
         //mostrar gráfico
         this.listaAptitudesPromedio.add(poblacionActual.aptitudProm());
         Ventana.graficar(

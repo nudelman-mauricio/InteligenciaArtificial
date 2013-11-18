@@ -6,6 +6,7 @@ import LogicaNegocios.Poblacion;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class Seleccion implements Runnable {
 
@@ -13,6 +14,7 @@ public class Seleccion implements Runnable {
     private int porcentajeSeleccion;
     private int maximaAptitud;
     private Set<Individuo> individuos;
+    private Set<Individuo> comprobacionIgualdad = new TreeSet();
     private Random generadorAleatorio;
     private int aleatorio;
 
@@ -22,23 +24,23 @@ public class Seleccion implements Runnable {
         this.maximaAptitud = maximaAptitud;
         this.individuos = individuos;
         this.generadorAleatorio = new Random();
+        
     }
 
     @Override
     public void run() {
-        
+
         //determinar cantidades, si es par, hace 50/50
         //si son impares se hace un mas por Ruleta
         int cantidadRuleta, cantidadElitista;
         if (this.porcentajeSeleccion % 2 != 0) {
-            cantidadRuleta=((int)(porcentajeSeleccion/2))+1;
-            cantidadElitista=cantidadRuleta-1;            
+            cantidadRuleta = ((int) (porcentajeSeleccion / 2)) + 1;
+            cantidadElitista = cantidadRuleta - 1;
+        } else {
+            cantidadRuleta = porcentajeSeleccion / 2;
+            cantidadElitista = cantidadRuleta;
         }
-        else{
-            cantidadRuleta=porcentajeSeleccion/2;
-            cantidadElitista=cantidadRuleta;
-        }
-      
+
         //selecccion por Ruleta
         seleccionRuleta(cantidadRuleta);
 
@@ -52,7 +54,7 @@ public class Seleccion implements Runnable {
     }
 
     private void seleccionRuleta(int cantidad) {
-        
+
         //Suma aptitud total Poblacion
         double sum = 0;
         for (Individuo aux : this.poblacionVieja.getIndividuos()) {
@@ -108,13 +110,35 @@ public class Seleccion implements Runnable {
     private void seleccionElitista(int cantidad) {
         Iterator it = this.poblacionVieja.getIndividuos().iterator();
         Individuo unIndividuo;
+        unIndividuo = new Individuo((Individuo) it.next());        
+        comprobacionIgualdad.add(unIndividuo);
         for (int i = 0; i < cantidad; i++) {
-            unIndividuo = new Individuo((Individuo) it.next());
+               
             synchronized (individuos) {
                 individuos.add(unIndividuo);
                 individuos.notify();
                 Ventana.cargarBarra(individuos.size());
             }
+            
+            unIndividuo = new Individuo((Individuo) it.next()); 
+            //Comprobar que no hayan individuos iguales en la seleccion elitista
+             while (comprobarExistencia(comprobacionIgualdad, unIndividuo)) {
+                unIndividuo = new Individuo((Individuo) it.next());
+            }
         }
+        comprobacionIgualdad.clear();
+    }
+
+    private boolean comprobarExistencia(Set<Individuo> comprobacionIgualdad, Individuo unIndividuo) {
+        Individuo unIndividuoAux;
+        Iterator it = this.comprobacionIgualdad.iterator();
+        for (int i = 0; i < comprobacionIgualdad.size(); i++) {
+            unIndividuoAux = new Individuo((Individuo) it.next());
+            if (unIndividuoAux.getGenes().equals(unIndividuo.getGenes())) {                
+                return true;                
+            }
+        }
+        comprobacionIgualdad.add(unIndividuo);
+        return false;
     }
 }
