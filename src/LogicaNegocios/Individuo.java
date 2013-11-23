@@ -1,6 +1,5 @@
 package LogicaNegocios;
 
-
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -14,6 +13,7 @@ public class Individuo implements Comparable {
     private double aptitud;
     private String genes;
     private boolean imposible;
+    private String cumple = "";
 
     public Individuo(String palabra, String operacion, ArrayList<ArrayList<Integer>> restricciones) { //palabra = string de letras únicas correspondiente a la operacion
         this.genes = palabra;
@@ -37,10 +37,10 @@ public class Individuo implements Comparable {
         if (!imposible) {
             int auxAptitud = 0;
             boolean bandera = true;
-                       
+
             for (int i = 0; i < restricciones.size(); i++) {
                 int contador = 0;
-                
+
                 auxAptitud += (i + 1) * (i + 1);
 
                 for (int j = 0; j < restricciones.get(i).size(); j++) {
@@ -61,7 +61,10 @@ public class Individuo implements Comparable {
                     }
                 }
                 if (bandera) {
-                    auxAptitud -= (i + 1) * (i + 1);                    
+                    auxAptitud -= (i + 1) * (i + 1);
+                    cumple += '1';
+                } else {
+                    cumple += '0';
                 }
                 bandera = true;
             }
@@ -71,7 +74,7 @@ public class Individuo implements Comparable {
             for (int i = 0; i < restricciones.size(); i++) {
                 maximaAptitud += (i + 1) * (i + 1);
             }
-            
+
             this.aptitud = maximaAptitud;
         }
     }
@@ -189,19 +192,42 @@ public class Individuo implements Comparable {
 
     public String mutacion() {
         Random r = new Random();
+        boolean bandera1 = false, bandera2 = false;
         char[] mutado;
         int nrand1 = 0, nrand2 = 0;
+        for (int i = 0; i < this.cumple.length(); i++) {
+            if (cumple.charAt(i) == '0') {
+                for (int j = 0; j < this.genes.length(); j++) {
+                    if (cumple.charAt(i) == genes.charAt(j)) {
+                        nrand1 = j;
+                        bandera1 = true;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < this.cumple.length(); i++) {
+            if (cumple.charAt(i) == '0' && i != nrand1) {
+                for (int j = 0; j < this.genes.length(); j++) {
+                    if (cumple.charAt(i) == genes.charAt(j)) {
+                        nrand2 = j;
+                        bandera2 = true;
+                    }
+                }
+            }
+        }
+
         while (nrand1 == nrand2) {
-            nrand1 = r.nextInt(10);
-            nrand2 = r.nextInt(10);
+            if (!bandera1) {
+                nrand1 = r.nextInt(10);
+            }
+            if (!bandera2) {
+                nrand2 = r.nextInt(10);
+            }
         }
         mutado = this.genes.toCharArray();
         mutado[nrand1] = this.genes.charAt(nrand2);
         mutado[nrand2] = this.genes.charAt(nrand1);
+
         return String.copyValueOf(mutado);
     }
-
-    
-
-  
 }
