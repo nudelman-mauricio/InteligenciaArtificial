@@ -195,7 +195,7 @@ public class Individuo implements Comparable {
         boolean bandera1 = false, bandera2 = false;
         char[] mutado;
         int nrand1 = 0, nrand2 = 0;
-        for (int i = 0; i < this.cumple.length(); i++) {
+        for (int i = cumple.length()-1; i>0; i--) {
             if (cumple.charAt(i) == '0') {
                 for (int j = 0; j < this.genes.length(); j++) {
                     if (cumple.charAt(i) == genes.charAt(j)) {
@@ -205,7 +205,7 @@ public class Individuo implements Comparable {
                 }
             }
         }
-        for (int i = 0; i < this.cumple.length(); i++) {
+        for (int i = cumple.length()-1; i>0; i--) {
             if (cumple.charAt(i) == '0' && i != nrand1) {
                 for (int j = 0; j < this.genes.length(); j++) {
                     if (cumple.charAt(i) == genes.charAt(j)) {
