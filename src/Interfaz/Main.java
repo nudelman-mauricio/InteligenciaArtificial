@@ -72,9 +72,7 @@ public class Main {
         for (int i = 0; i < restricciones.size(); i++) {
             maximaAptitud += (i+1)*(i+1);
         }
-        if(cantLetrasResultado(operacion)>mayorOperando(operacion)){
-            maximaAptitud=+3;
-        }
+       
         
         return maximaAptitud;
     }
@@ -83,31 +81,6 @@ public class Main {
         unAlgoritmoGenetico.pararAlgoritmo();
     }
     
-    public static int mayorOperando(String operacion){
-        int mayor=0, contador=0;
-        for(int i=0;i<operacion.length();i++){
-            if(operacion.charAt(i)=='+' || operacion.charAt(i)=='='){
-                if(mayor<contador){
-                    mayor=contador;
-                    contador=0;
-                }
-                if(operacion.charAt(i)=='='){
-                    i=operacion.length();
-                }
-            }
-            contador++;
-        }        
-        return mayor;
-    }
     
-    public static int cantLetrasResultado(String operacion){
-        int contador=0;
-        for(int i=0;i<operacion.length();i++){
-            if(operacion.charAt(i)=='='){
-                contador=operacion.length()-i;
-            }
-        }
-        return contador;
-    }
     
 }

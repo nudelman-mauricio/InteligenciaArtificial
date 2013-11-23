@@ -1,7 +1,6 @@
 package LogicaNegocios;
 
-import static Interfaz.Main.cantLetrasResultado;
-import static Interfaz.Main.mayorOperando;
+
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -38,9 +37,7 @@ public class Individuo implements Comparable {
         if (!imposible) {
             int auxAptitud = 0;
             boolean bandera = true;
-            if (cantLetrasResultado(operacion) > mayorOperando(operacion)) {
-                auxAptitud = +3;
-            }            
+                       
             for (int i = 0; i < restricciones.size(); i++) {
                 int contador = 0;
                 
@@ -64,19 +61,7 @@ public class Individuo implements Comparable {
                     }
                 }
                 if (bandera) {
-                    auxAptitud -= (i + 1) * (i + 1);
-                    if (i == 0) {
-                        
-                        if (cantLetrasResultado(operacion) > mayorOperando(operacion)) {
-                            for (int l = 0; l < operacion.length(); l++) {
-                                if (operacion.charAt(l) == '=') {
-                                    if (operacion.charAt(l + 1) == '1' || operacion.charAt(l + 1) == '0') {
-                                        auxAptitud -= 3;                                        
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    auxAptitud -= (i + 1) * (i + 1);                    
                 }
                 bandera = true;
             }
@@ -86,9 +71,7 @@ public class Individuo implements Comparable {
             for (int i = 0; i < restricciones.size(); i++) {
                 maximaAptitud += (i + 1) * (i + 1);
             }
-            if (cantLetrasResultado(operacion) > mayorOperando(operacion)) {
-                maximaAptitud =+3;
-            }
+            
             this.aptitud = maximaAptitud;
         }
     }
@@ -235,13 +218,5 @@ public class Individuo implements Comparable {
         return mayor;
     }
 
-    private int cantLetrasResultado(String operacion) {
-        int contador = 0;
-        for (int i = 0; i < operacion.length(); i++) {
-            if (operacion.charAt(i) == '=') {
-                contador = operacion.length() - i;
-            }
-        }
-        return contador;
-    }
+  
 }
