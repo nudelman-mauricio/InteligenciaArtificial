@@ -201,22 +201,7 @@ public class Individuo implements Comparable {
         return String.copyValueOf(mutado);
     }
 
-    private int mayorOperando(String operacion) {
-        int mayor = 0, contador = 0;
-        for (int i = 0; i < operacion.length(); i++) {
-            if (operacion.charAt(i) == '+' || operacion.charAt(i) == '=') {
-                if (mayor < contador) {
-                    mayor = contador;
-                    contador = 0;
-                }
-                if (operacion.charAt(i) == '=') {
-                    i = operacion.length();
-                }
-            }
-            contador++;
-        }
-        return mayor;
-    }
+    
 
   
 }
