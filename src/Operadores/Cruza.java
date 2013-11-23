@@ -58,13 +58,25 @@ public class Cruza implements Runnable {
 
             //elegir punto inicial de cruza ciclica
             //si son iguales los cromosomas hay que elegir otro punto porque sino quedan iguales los hijos
-                             
             Random r = new Random();
-            pos = r.nextInt(10);            
-            
-            
-            
-            
+            pos = r.nextInt(10);
+
+            for (int i = pos; i < 10; i++) {
+                if (padre[i] != madre[i]) {
+                    pos = i;
+                    i = 10;
+                }
+                if ((i == 10) && (padre[i] == madre[i])) {
+                    for (int k = 0; k < 10; k++) {
+                        if (padre[k] != madre[k]) {
+                            pos = k;
+                            i = 10;
+                            k = 10;
+                        }
+                    }
+                }
+            }
+
             hijo1[pos] = padre[pos];
             hijo2[pos] = madre[pos];
 
