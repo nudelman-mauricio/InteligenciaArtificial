@@ -6,6 +6,7 @@ import LogicaNegocios.Poblacion;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.Random;
 
 public class Cruza implements Runnable {
 
@@ -57,13 +58,13 @@ public class Cruza implements Runnable {
 
             //elegir punto inicial de cruza ciclica
             //si son iguales los cromosomas hay que elegir otro punto porque sino quedan iguales los hijos
-            pos = 0;
-            for (int i = 0; i < 10; i++) {
-                if (padre[i] != madre[i]) {
-                    pos = i;
-                    i = 10;
-                }
-            }
+                             
+            Random r = new Random();
+            pos = r.nextInt(10);            
+            
+            
+            
+            
             hijo1[pos] = padre[pos];
             hijo2[pos] = madre[pos];
 
