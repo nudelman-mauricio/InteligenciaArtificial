@@ -66,7 +66,7 @@ public class Cruza implements Runnable {
                     pos = i;
                     i = 10;
                 }
-                if ((i == 10) && (padre[i] == madre[i])) {
+                if ((i == 9) && (padre[i] == madre[i])) {
                     for (int k = 0; k < 10; k++) {
                         if (padre[k] != madre[k]) {
                             pos = k;
