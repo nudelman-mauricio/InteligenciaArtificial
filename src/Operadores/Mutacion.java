@@ -41,10 +41,10 @@ public class Mutacion implements Runnable {
         }
 
         //selecccion por Ruleta
-        mutacionAleatoria(cantidadAleatoria);
+        mutacionAleatoria(porcentajeMutacion);
 
         //seleccion Elitista
-        mutacionElitista(cantidadElitista);
+       // mutacionElitista(cantidadElitista);
     }
 
     private void mutacionAleatoria(int cantidad) {
